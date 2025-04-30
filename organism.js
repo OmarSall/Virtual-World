@@ -1,28 +1,32 @@
-//organism.js
+// organism.js
 export class Organism {
-    constructor(strength, initiative, board, age = 0) {
+    constructor(strength, initiative, icon = "?", age = 0) {
         this.strength = strength;
         this.initiative = initiative;
         this.age = age;
-        this.board = board;
+        this.icon = icon;
+        this.alive = true;
         this.x = null;
         this.y = null;
     }
 
-    setPostition(x, y) {
+    setPosition(x, y) {
         this.x = x;
         this.y = y;
     }
 
-    incrementAge() {
-        this.age++;
-    }
-
-    action() {
-        // overridden in subclasses
-    }
-
     getIcon() {
-        return "?"; // default icon
+        return this.icon;
+    }
+
+    render() {
+        const div = document.createElement("div");
+        div.className = "organism";
+        div.textContent = this.getIcon();
+        return div;
+    }
+
+    action(board) {
+        this.age++;
     }
 }

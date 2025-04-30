@@ -7,7 +7,7 @@ export class Wolf extends Animal {
     }
 
     getIcon() {
-        return "🐺";
+        return "W";
     }
 
     action() {

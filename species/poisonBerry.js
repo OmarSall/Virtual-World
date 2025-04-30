@@ -7,7 +7,7 @@ export class PoisonBerry extends Plant {
     }
 
     getIcon() {
-        return '🍇';
+        return 'PB';
     }
 
     clone() {

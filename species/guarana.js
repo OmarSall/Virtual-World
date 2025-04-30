@@ -7,7 +7,7 @@ export class Guarana extends Plant {
     }
 
     getIcon() {
-        return '🍃';
+        return 'G';
     }
 
     clone() {

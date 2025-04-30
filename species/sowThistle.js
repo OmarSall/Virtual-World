@@ -7,7 +7,7 @@ export class SowThistle extends Plant {
     }
 
     getIcon() {
-        return '🌼';
+        return 'ST';
     }
 
     clone() {

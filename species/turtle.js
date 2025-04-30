@@ -7,7 +7,7 @@ export class Turtle extends Animal {
     }
 
     getIcon() {
-        return '🐢';
+        return 'T';
     }
 
     action() {

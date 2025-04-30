@@ -7,7 +7,7 @@ export class Fox extends Animal {
     }
 
     getIcon() {
-        return '🦊';
+        return 'F';
     }
 
     action() {

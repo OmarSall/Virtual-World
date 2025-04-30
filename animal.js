@@ -7,7 +7,7 @@ export class Animal extends Organism {
     }
 
     // Default move behavior (random direction)
-    move() {
+    moveTo() {
         const directions = [
             { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
             { dx: -1, dy: 0 }, { dx: 1, dy: 0 },
@@ -31,12 +31,17 @@ export class Animal extends Organism {
     }
 
     fight(other) {
-        if (this.strength > other.strength) {
-            this.board.getTile(other.x, other.y).removeOrganism();
-        } else if (this.strength < other.strength) {
-            this.board.getTile(this.x, this.y).removeOrganism();
+        const myTile = this.board.getTile(this.x, this.y);
+        const otherTile = this.board.getTile(other.x, other.y);
+    
+        if (this.strength >= other.strength) {
+            other.alive = false;
+            otherTile.removeOrganism();
+            this.moveTo(otherTile); // Zajmujemy pole przeciwnika
+        } else {
+            this.alive = false;
+            myTile.removeOrganism();
         }
-        // If equal, nothing happens
     }
 
     mate() {

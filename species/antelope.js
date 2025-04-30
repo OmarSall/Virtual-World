@@ -7,7 +7,7 @@ export class Antelope extends Animal {
     }
 
     getIcon() {
-        return '🦌';
+        return 'AL';
     }
 
     action() {

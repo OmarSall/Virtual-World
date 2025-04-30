@@ -1,6 +1,5 @@
 // startGame.js
-// Entry point script that initializes the game
-import { Board } from "board.js";
+import { Board } from "./board.js";
 
 window.onload = () => {
     const startButton = document.getElementById('start-game');
@@ -10,44 +9,55 @@ window.onload = () => {
     const numpadInstructions = document.getElementById('numpad-instructions');
     const numpadControls = document.getElementById('numpad-controls');
 
-    // Initializing the board container as null, will be assigned later
     let board = null;
 
     startButton.addEventListener("click", () => {
-        // Hide the start button and show instructions
-        startButton.style.display = "none";  // Hide start button
-        instructions.classList.remove("hidden");  // Show instructions
+        console.log("Start button clicked!");
+
+        // Update instruction
+        instructionText.innerText = "Click on a tile to choose starting position for the player.";
+
+
+        // Hide start button and show UI elements
+        startButton.style.display = "none";
+        instructions.classList.remove("hidden");
         numpadInstructions.classList.remove("hidden");
         numpadControls.classList.remove("hidden");
 
-        // Update the instruction text
-        instructionText.innerText = "Click on a tile to choose starting position for the player.";
-
-        // Initialize the board
-        board = new Board(20, 20); // Assuming Board constructor takes the size of the grid
+        
+        // Initialize board
+        board = new Board(20, 20);
         board.createBoard();
-
-        // Show the board
-        boardContainer.style.display = "grid"; // Make board visible
+        boardContainer.style.display = "grid";
         boardContainer.classList.remove("hidden");
 
-        // Set up click event to place the player
+        // Place the player on click
         boardContainer.addEventListener("click", function placePlayerFirst(event) {
             if (event.target.classList.contains("tile")) {
                 const x = parseInt(event.target.dataset.x);
                 const y = parseInt(event.target.dataset.y);
 
-                // Place the player at the chosen coordinates
                 board.placePlayer(x, y);
 
-                // Update instruction after placing the player
-                instructionText.innerText = "Use Numpad to move the player. Click empty tile to add an organism.";
-
-                // Remove the click event listener for placing the player
+                instructionText.innerText = "Use Numpad to move. Click empty tile to add an organism.";
                 boardContainer.removeEventListener("click", placePlayerFirst);
 
-                // Enable the game (allow movement)
-                board.enableGame();
+                board.enableGame(); // Allows movement
+            }
+        });
+
+        // Numpad controls
+        document.addEventListener("keydown", (event) => {
+            const directionMap = {
+                "Numpad7": [-1, -1], "Numpad8": [0, -1], "Numpad9": [1, -1],
+                "Numpad4": [-1, 0],  "Numpad5": [0, 0],  "Numpad6": [1, 0],
+                "Numpad1": [-1, 1],  "Numpad2": [0, 1],  "Numpad3": [1, 1],
+            };
+
+            if (board?.player && directionMap[event.code]) {
+                const [dx, dy] = directionMap[event.code];
+                board.player.setNextMove(dx, dy);
+                board.makeTurn();
             }
         });
     });

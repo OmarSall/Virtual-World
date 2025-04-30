@@ -7,7 +7,7 @@ export class Sheep extends Animal {
     }
 
     getIcon() {
-        return '🐑';
+        return 'SH';
     }
 
     action() {
