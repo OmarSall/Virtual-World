@@ -14,6 +14,7 @@ export class Board {
         this.boardContainer = document.getElementById("board");
     }
 
+    // grid creation and random placement of the organisms
     createBoard() {
         this.grid = []; // Clear old grid
         this.boardContainer.innerHTML = ""; // Clear old tiles
@@ -31,7 +32,7 @@ export class Board {
         }
     
         // Generate initial random organisms
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 20; i++) {
             const org = getRandomOrganism();
             const emptyTile = this.getRandomEmptyTile();
             if (emptyTile) {
