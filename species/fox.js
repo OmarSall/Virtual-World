@@ -11,6 +11,7 @@ export class Fox extends Animal {
     }
 
     action() {
+        // console.log("Fox action this.board:", this.board);
         // Fox moves randomly, but it will avoid stronger organisms
         const directions = [
             { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },

@@ -14,7 +14,7 @@ const organismClasses = [
     Grass, Guarana, PoisonBerry, SowThistle
 ];
 
-export function getRandomOrganism() {
+export function getRandomOrganism(board) {
     const OrgClass = organismClasses[Math.floor(Math.random() * organismClasses.length)];
-    return new OrgClass();
+    return new OrgClass(board);
 }

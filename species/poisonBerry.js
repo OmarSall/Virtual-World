@@ -1,5 +1,6 @@
 // species/poisonBerry.js
 import { Plant } from "../plant.js";
+import { Animal } from "../animal.js";
 
 export class PoisonBerry extends Plant {
     constructor(board) {
@@ -12,6 +13,10 @@ export class PoisonBerry extends Plant {
 
     clone() {
         return new PoisonBerry(this.board);
+    }
+
+    consume(organism) {
+        organism.alive = false;
     }
 
     // Overridden to remove organisms that eat the poison berry

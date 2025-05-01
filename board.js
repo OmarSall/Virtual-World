@@ -1,10 +1,13 @@
-// board.js
-// Board class handles the grid, turn order, and interactions
 import { Tile } from "./tile.js";
 import { Player } from "./player.js";
 import { getRandomOrganism } from "./organismCreation.js";
 
 export class Board {
+    static directionMap = {
+        "Numpad7": [-1, -1], "Numpad8": [0, -1], "Numpad9": [1, -1],
+        "Numpad4": [-1, 0],  "Numpad5": [0, 0],  "Numpad6": [1, 0],
+        "Numpad1": [-1, 1],  "Numpad2": [0, 1],  "Numpad3": [1, 1],
+    };
     constructor(rows, columns) {
         this.rows = rows;
         this.columns = columns;
@@ -14,13 +17,12 @@ export class Board {
         this.boardContainer = document.getElementById("board");
     }
 
-    // grid creation and random placement of the organisms
     createBoard() {
-        this.grid = []; // Clear old grid
-        this.boardContainer.innerHTML = ""; // Clear old tiles
+        this.grid = [];
+        this.boardContainer.innerHTML = "";
         this.boardContainer.style.gridTemplateColumns = `repeat(${this.columns}, 30px)`;
         this.boardContainer.style.gridTemplateRows = `repeat(${this.rows}, 30px)`;
-    
+
         for (let y = 0; y < this.rows; y++) {
             const row = [];
             for (let x = 0; x < this.columns; x++) {
@@ -30,10 +32,9 @@ export class Board {
             }
             this.grid.push(row);
         }
-    
-        // Generate initial random organisms
+
         for (let i = 0; i < 20; i++) {
-            const org = getRandomOrganism();
+            const org = getRandomOrganism(this);
             const emptyTile = this.getRandomEmptyTile();
             if (emptyTile) {
                 emptyTile.setOrganism(org);
@@ -41,7 +42,6 @@ export class Board {
             }
         }
     }
-    
 
     getTile(x, y) {
         if (x < 0 || x >= this.columns || y < 0 || y >= this.rows) return null;
@@ -65,29 +65,28 @@ export class Board {
 
     enableGame() {
         document.addEventListener("keydown", (event) => {
-            if (!this.player) return;
-
-            const directionMap = {
-                "7": [-1, -1], "8": [0, -1], "9": [1, -1],
-                "4": [-1, 0],  "5": [0, 0],  "6": [1, 0],
-                "1": [-1, 1],  "2": [0, 1],  "3": [1, 1],
-            };
-
-            const key = event.key;
-            if (directionMap[key]) {
-                const [dx, dy] = directionMap[key];
-                this.player.setNextMove(dx, dy);
-                this.executeTurn();
+            try {
+                if (!this.player) {
+                    return
+                }
+                const key = event.code;
+                if (directionMap[key]) {
+                    const [dx, dy] = directionMap[key];
+                    this.player.setNextMove(dx, dy);
+                    this.makeTurn();
+                }
+            } catch (error) {
+                console.error("Error while processing key event:", error);
             }
-        });
+         });
     }
 
-    executeTurn() {
+    makeTurn() {
         this.sortOrganismsByInitiative();
 
         for (const org of [...this.organisms]) {
             if (org.alive) {
-                org.action(this);
+                org.action();
             }
         }
 
@@ -112,15 +111,13 @@ export class Board {
         const other = newTile.organism;
         if (other) {
             if (organism.constructor === other.constructor) {
-                // Mating logic
                 const emptyAdjacent = this.getAdjacentEmptyTile(newX, newY);
                 if (emptyAdjacent) {
-                    const child = new organism.constructor();
+                    const child = new organism.constructor(this);
                     emptyAdjacent.setOrganism(child);
                     this.organisms.push(child);
                 }
             } else {
-                // Fight
                 if (organism.strength >= other.strength) {
                     other.alive = false;
                     newTile.setOrganism(organism);

@@ -1,8 +1,9 @@
 // organism.js
 export class Organism {
-    constructor(strength, initiative, icon = "?", age = 0) {
+    constructor(strength, initiative, board, icon = "?", age = 0) {
         this.strength = strength;
         this.initiative = initiative;
+        this.board = board;
         this.age = age;
         this.icon = icon;
         this.alive = true;
