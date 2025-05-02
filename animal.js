@@ -1,115 +1,175 @@
 import { Organism } from "./organism.js";
 
+/**
+ * Base class for all animal organisms in the game
+ * @extends Organism
+ */
 export class Animal extends Organism {
+    /**
+     * Creates a new animal
+     * @param {number} strength - The animal's strength in combat
+     * @param {number} initiative - The animal's turn priority
+     * @param {Board} board - Reference to the game board
+     */
     constructor(strength, initiative, board) {
         super(strength, initiative, board);
-        
     }
 
-    // Default move behavior (random direction)
+    /**
+     * Attempts to move the animal in a random valid direction
+     * @returns {boolean} True if movement was successful
+     */
     move() {
-        if (!this.alive) {
-            return
-        }
+        try {
+            if (!this.alive) return false;
 
-        const directions = [
-            { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
-            { dx: -1, dy: 0 }, { dx: 1, dy: 0 },
-            { dx: -1, dy: 1 }, { dx: 0, dy: 1 }, { dx: 1, dy: 1 }
-        ];
+            const directions = [
+                { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
+                { dx: -1, dy: 0 }, { dx: 1, dy: 0 },
+                { dx: -1, dy: 1 }, { dx: 0, dy: 1 }, { dx: 1, dy: 1 }
+            ];
 
-        // Shuffle directions to randomize movement attempts
-        for (let i = directions.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [directions[i], directions[j]] = [directions[j], directions[i]];
-        }
+            // Shuffle directions to randomize movement attempts
+            for (let i = directions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [directions[i], directions[j]] = [directions[j], directions[i]];
+            }
 
-        for (const dir of directions) {
-            const newX = this.x + dir.dx;
-            const newY = this.y + dir.dy;
-            const targetTile = this.board.getTile(newX, newY);
+            for (const dir of directions) {
+                const newX = this.x + dir.dx;
+                const newY = this.y + dir.dy;
+                const targetTile = this.board.getTile(newX, newY);
 
-            if (!targetTile) continue;
+                if (!targetTile) continue;
 
-            if (targetTile.isEmpty()) {
-                this.board.moveOrganism(this, newX, newY);
-                return;
-            } else if (targetTile.organism instanceof Animal) {
-                if (targetTile.organism.strength <= this.strength) {
-                    this.fight(targetTile.organism);
-                    return;
+                if (targetTile.isEmpty()) {
+                    this.board.moveOrganism(this, newX, newY);
+                    return true;
+                } else if (targetTile.organism instanceof Animal) {
+                    if (targetTile.organism.strength <= this.strength) {
+                        this.fight(targetTile.organism);
+                        return true;
+                    }
                 }
             }
+            return false; // No valid move found
+        } catch (error) {
+            console.error('Error during animal movement:', error);
+            return false;
         }
-        // If no move possible, stay put
     }
 
+    /**
+     * Initiates combat with another animal
+     * @param {Animal} other - The animal to fight with
+     * @returns {boolean} True if the fight was successful
+     */
     fight(other) {
-        if (!this.alive || !other.alive) {
-            return;
-        }
+        try {
+            if (!this.alive || !other.alive) return false;
 
-        const myTile = this.board.getTile(this.x, this.y);
-        const otherTile = this.board.getTile(other.x, other.y);
+            const myTile = this.board.getTile(this.x, this.y);
+            const otherTile = this.board.getTile(other.x, other.y);
 
-        if (this.strength >= other.strength) {
-            other.alive = false;
-            otherTile.removeOrganism();
-            this.board.moveOrganism(this, other.x, other.y);
-        } else {
-            this.alive = false;
-            myTile.removeOrganism();
-            // Ensure the organism is removed from the board's list
-            const index = this.board.organisms.indexOf(this);
-            if (index > -1) {
-                this.board.organisms.splice(index, 1);
+            if (!myTile || !otherTile) {
+                throw new Error('Invalid tile positions for combat');
             }
+
+            if (this.strength >= other.strength) {
+                other.alive = false;
+                otherTile.removeOrganism();
+                this.board.moveOrganism(this, other.x, other.y);
+            } else {
+                this.alive = false;
+                myTile.removeOrganism();
+                this.removeFromBoard();
+            }
+            return true;
+        } catch (error) {
+            console.error('Error during combat:', error);
+            return false;
         }
     }
 
+    /**
+     * Attempts to create offspring in an adjacent empty tile
+     * @returns {boolean} True if mating was successful
+     */
     mate() {
-        if (!this.alive) {
-            return;
-        }
+        try {
+            if (!this.alive) return false;
 
-        const adjacentTiles = [
-            { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
-            { dx: -1, dy: 0 }, { dx: 1, dy: 0 },
-            { dx: -1, dy: 1 }, { dx: 0, dy: 1 }, { dx: 1, dy: 1 }
-        ];
+            const adjacentTiles = [
+                { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
+                { dx: -1, dy: 0 }, { dx: 1, dy: 0 },
+                { dx: -1, dy: 1 }, { dx: 0, dy: 1 }, { dx: 1, dy: 1 }
+            ];
 
-        for (let dir of adjacentTiles) {
-            const newX = this.x + dir.dx;
-            const newY = this.y + dir.dy;
-            const targetTile = this.board.getTile(newX, newY);
+            for (const dir of adjacentTiles) {
+                const newX = this.x + dir.dx;
+                const newY = this.y + dir.dy;
+                const targetTile = this.board.getTile(newX, newY);
 
-            if (targetTile && targetTile.isEmpty()) {
-                const offspring = this.clone();
-                targetTile.setOrganism(offspring);
-                return; // Only one offspring per turn
+                if (targetTile?.isEmpty()) {
+                    const offspring = this.clone();
+                    targetTile.setOrganism(offspring);
+                    return true;
+                }
             }
+            return false;
+        } catch (error) {
+            console.error('Error during mating:', error);
+            return false;
         }
     }
 
+    /**
+     * Creates a copy of this animal
+     * @returns {Animal} A new instance of the same animal type
+     */
     clone() {
         return new Animal(this.strength, this.initiative, this.board);
     }
 
+    /**
+     * Consumes a plant
+     * @param {Plant} plant - The plant to consume
+     */
     consume(plant) {
-        if (!this.alive) {
-            return;
+        try {
+            if (!this.alive) return;
+            console.log(`${this.constructor.name} consumed ${plant.constructor.name}`);
+        } catch (error) {
+            console.error('Error during consumption:', error);
         }
-
-        // Default behavior: just consume the plant
-        // Specific plants can override their effects when consumed
-        console.log(`${this.constructor.name} consumed ${plant.constructor.name}`);
     }
 
-    action() {
-        if (!this.alive) {
-            return;
+    /**
+     * Removes this animal from the board's organism list
+     */
+    removeFromBoard() {
+        try {
+            const index = this.board.organisms.indexOf(this);
+            if (index > -1) {
+                this.board.organisms.splice(index, 1);
+            }
+        } catch (error) {
+            console.error('Error removing from board:', error);
         }
-        this.move();
-        this.mate();
+    }
+
+    /**
+     * Performs the animal's turn actions
+     * @override
+     */
+    action() {
+        try {
+            if (!this.alive) return;
+            super.action(); // Increment age
+            this.move();
+            this.mate();
+        } catch (error) {
+            console.error('Error in animal action:', error);
+        }
     }
 }

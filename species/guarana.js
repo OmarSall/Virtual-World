@@ -1,4 +1,3 @@
-// species/guarana.js
 import { Plant } from "../plant.js";
 
 export class Guarana extends Plant {
@@ -7,7 +6,7 @@ export class Guarana extends Plant {
     }
 
     getIcon() {
-        return 'Gu';
+        return 'GU';
     }
 
     clone() {

@@ -2,6 +2,8 @@
 import { Plant } from "../plant.js";
 import { Animal } from "../animal.js";
 
+
+
 export class PoisonBerry extends Plant {
     constructor(board) {
         super(board);

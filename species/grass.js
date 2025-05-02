@@ -7,7 +7,7 @@ export class Grass extends Plant {
     }
 
     getIcon() {
-        return 'Gr';
+        return 'G';
     }
 
     clone() {

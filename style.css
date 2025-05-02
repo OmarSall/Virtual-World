@@ -85,7 +85,7 @@ body {
 }
 
 .tile:hover {
-    background-color: #f0f0f0;
+    background-color: #55c344;
 }
 
 /* Organism styling */
@@ -111,26 +111,81 @@ body {
     background: white;
     border: 1px solid #ccc;
     padding: 20px;
-    width: 300px;
     z-index: 1000;
-    max-width: 100%;
+    width: 300px;
+    max-width: 90vw;  /* Responsive width */
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    margin: 0 auto;  /* Center horizontally */
 }
 
-.popup button {
-    margin: 5px;
-    padding: 8px 16px;
+/* Ensure popup content is centered */
+.popup h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.popup .organism-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Override hidden class for popup */
+.popup.hidden {
+    display: none;
+}
+
+.popup:not(.hidden) {
+    display: block;
+}
+
+.popup .organism-options button {
+    margin: 0;
+    padding: 10px;
     background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 4px;
     font-size: 14px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    width: 100%;
+    height: 100%;
+    min-height: 40px;
 }
 
-.popup button:hover {
+.popup .organism-options button:hover {
     background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.popup .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    line-height: 1;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup .close-button:hover {
+    color: white;
+    background-color: #ff4444;
+    border-radius: 50%;
+    transform: scale(1.1);
 }

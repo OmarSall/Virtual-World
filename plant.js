@@ -1,45 +1,106 @@
-// plant.js
 import { Organism } from "./organism.js";
 
+/**
+ * Base class for all plant organisms in the game
+ * @extends Organism
+ */
 export class Plant extends Organism {
+    /**
+     * Creates a new plant with 0 strength and initiative
+     * @param {Board} board - Reference to the game board
+     */
     constructor(board) {
         super(0, 0, board);
     }
 
-    // Default spreading behavior (10% chance each turn)
+    /**
+     * Attempts to spread to an adjacent empty tile
+     * Plants have a 10% chance to spread each turn
+     * @returns {boolean} True if spreading was successful
+     */
     spread() {
-        const directions = [
-            { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
-            { dx: -1, dy: 0 }, { dx: 1, dy: 0 },
-            { dx: -1, dy: 1 }, { dx: 0, dy: 1 }, { dx: 1, dy: 1 }
-        ];
+        try {
+            if (!this.alive) return false;
 
-        const chance = Math.random();
-        if (chance > 0.9) { // 10% chance to spread
-            const dir = directions[Math.floor(Math.random() * directions.length)];
-            const newX = this.x + dir.dx;
-            const newY = this.y + dir.dy;
-            const targetTile = this.board.getTile(newX, newY);
+            const directions = [
+                { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
+                { dx: -1, dy: 0 }, { dx: 1, dy: 0 },
+                { dx: -1, dy: 1 }, { dx: 0, dy: 1 }, { dx: 1, dy: 1 }
+            ];
 
-            if (targetTile && targetTile.isEmpty()) {
-                const plant = this.clone();
-                targetTile.setOrganism(plant);
+            const chance = Math.random();
+            if (chance > 0.9) { // 10% chance to spread
+                const dir = directions[Math.floor(Math.random() * directions.length)];
+                const newX = this.x + dir.dx;
+                const newY = this.y + dir.dy;
+                const targetTile = this.board.getTile(newX, newY);
+
+                if (targetTile?.isEmpty()) {
+                    const plant = this.clone();
+                    targetTile.setOrganism(plant);
+                    this.board.organisms.push(plant);
+                    return true;
+                }
             }
+            return false;
+        } catch (error) {
+            console.error('Error during plant spreading:', error);
+            return false;
         }
     }
 
-    // Clone method to be overridden
+    /**
+     * Creates a copy of this plant
+     * @returns {Plant} A new instance of the same plant type
+     */
     clone() {
-        return new Plant(this.board); // Base plant clone (to be extended)
+        try {
+            return new Plant(this.board);
+        } catch (error) {
+            console.error('Error cloning plant:', error);
+            throw error;
+        }
     }
 
+    /**
+     * Applies plant's effect when consumed by an organism
+     * @param {Organism} organism - The organism consuming this plant
+     */
     consume(organism) {
-        // By default, plants have no special effect when consumed
-        console.log(`${organism.constructor.name} consumed ${this.constructor.name}`);
+        try {
+            if (!this.alive || !organism?.alive) return;
+            // By default, plants have no special effect when consumed
+            console.log(`${organism.constructor.name} consumed ${this.constructor.name}`);
+        } catch (error) {
+            console.error('Error during plant consumption:', error);
+        }
     }
 
-    // Action method for plants
+    /**
+     * Performs the plant's turn action
+     * @override
+     */
     action() {
-        this.spread();
+        try {
+            if (!this.alive) return;
+            super.action(); // Increment age
+            this.spread();
+        } catch (error) {
+            console.error('Error in plant action:', error);
+        }
+    }
+
+    /**
+     * Removes this plant from the board's organism list
+     */
+    removeFromBoard() {
+        try {
+            const index = this.board.organisms.indexOf(this);
+            if (index > -1) {
+                this.board.organisms.splice(index, 1);
+            }
+        } catch (error) {
+            console.error('Error removing plant from board:', error);
+        }
     }
 }
