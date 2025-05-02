@@ -33,6 +33,11 @@ export class Plant extends Organism {
         return new Plant(this.board); // Base plant clone (to be extended)
     }
 
+    consume(organism) {
+        // By default, plants have no special effect when consumed
+        console.log(`${organism.constructor.name} consumed ${this.constructor.name}`);
+    }
+
     // Action method for plants
     action() {
         this.spread();

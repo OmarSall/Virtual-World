@@ -7,10 +7,16 @@ export class Guarana extends Plant {
     }
 
     getIcon() {
-        return 'G';
+        return 'Gu';
     }
 
     clone() {
         return new Guarana(this.board);
+    }
+
+    consume(organism) {
+        if (organism.strength !== undefined) {
+            organism.strength += 3;
+        }
     }
 }

@@ -8,6 +8,7 @@ export class Board {
         "Numpad4": [-1, 0],  "Numpad5": [0, 0],  "Numpad6": [1, 0],
         "Numpad1": [-1, 1],  "Numpad2": [0, 1],  "Numpad3": [1, 1],
     };
+
     constructor(rows, columns) {
         this.rows = rows;
         this.columns = columns;
@@ -15,6 +16,7 @@ export class Board {
         this.organisms = [];
         this.player = null;
         this.boardContainer = document.getElementById("board");
+        this._keydownListener = null;
     }
 
     createBoard() {
@@ -64,32 +66,61 @@ export class Board {
     }
 
     enableGame() {
-        document.addEventListener("keydown", (event) => {
+        // Remove any existing listeners
+        if (this._keydownListener) {
+            document.removeEventListener("keydown", this._keydownListener);
+        }
+        if (this._keyupListener) {
+            document.removeEventListener("keyup", this._keyupListener);
+        }
+
+        // Track if key is being held down
+        this._keyHeld = false;
+
+        // Create keydown listener
+        this._keydownListener = (event) => {
             try {
-                if (!this.player) {
-                    return
-                }
+                if (!this.player || !this.player.alive || this._keyHeld) return;
+                
                 const key = event.code;
-                if (directionMap[key]) {
-                    const [dx, dy] = directionMap[key];
+                if (this.constructor.directionMap[key]) {
+                    this._keyHeld = true;
+                    const [dx, dy] = this.constructor.directionMap[key];
+                    console.log(`Moving with dx: ${dx}, dy: ${dy}`);
                     this.player.setNextMove(dx, dy);
                     this.makeTurn();
                 }
             } catch (error) {
                 console.error("Error while processing key event:", error);
             }
-         });
+        };
+
+        // Create keyup listener
+        this._keyupListener = (event) => {
+            const key = event.code;
+            if (this.constructor.directionMap[key]) {
+                this._keyHeld = false;
+            }
+        };
+
+        // Add the event listeners
+        // document.addEventListener("keydown", this._keydownListener);
+        // document.addEventListener("keyup", this._keyupListener);
     }
 
     makeTurn() {
+        console.log("Making turn...");
+        
         this.sortOrganismsByInitiative();
 
+        // Make actions only for alive organisms
         for (const org of [...this.organisms]) {
             if (org.alive) {
                 org.action();
             }
         }
 
+        // Clean up dead organisms after turn
         this.organisms = this.organisms.filter(o => o.alive);
     }
 
@@ -103,34 +134,18 @@ export class Board {
     }
 
     moveOrganism(organism, newX, newY) {
+        // Don't move if organism is not alive
+        if (!organism.alive) return;
+
         const oldTile = this.getTile(organism.x, organism.y);
         const newTile = this.getTile(newX, newY);
 
-        if (!newTile || !oldTile || !organism.alive) return;
+        if (!newTile || !oldTile) return;
 
-        const other = newTile.organism;
-        if (other) {
-            if (organism.constructor === other.constructor) {
-                const emptyAdjacent = this.getAdjacentEmptyTile(newX, newY);
-                if (emptyAdjacent) {
-                    const child = new organism.constructor(this);
-                    emptyAdjacent.setOrganism(child);
-                    this.organisms.push(child);
-                }
-            } else {
-                if (organism.strength >= other.strength) {
-                    other.alive = false;
-                    newTile.setOrganism(organism);
-                    oldTile.removeOrganism();
-                } else if (organism.strength < other.strength) {
-                    organism.alive = false;
-                    oldTile.removeOrganism();
-                }
-            }
-        } else {
-            newTile.setOrganism(organism);
-            oldTile.removeOrganism();
-        }
+        // Simple movement - the target tile should be empty at this point
+        oldTile.removeOrganism();
+        newTile.setOrganism(organism);
+        organism.setPosition(newX, newY);
     }
 
     getAdjacentEmptyTile(x, y) {

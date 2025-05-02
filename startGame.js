@@ -44,8 +44,12 @@ window.onload = () => {
 
                 board.enableGame(); // Allows movement
 
+                // Remove any existing click listener first
+                boardContainer.removeEventListener("click", onBoardClick);
+
                 // Add listener for adding organisms on empty tile click
                 boardContainer.addEventListener("click", onBoardClick);
+                console.log("Added click listener for organism creation");
             }
         });
 
@@ -61,18 +65,36 @@ window.onload = () => {
 
     function onBoardClick(event) {
         if (!event.target.classList.contains("tile")) return;
+        console.log("Board clicked!");
+
+        if (!event.target.classList.contains("tile")) {
+            console.log("Clicked target is not a tile");
+            return;
+        }
 
         const x = parseInt(event.target.dataset.x);
         const y = parseInt(event.target.dataset.y);
+        console.log(`Clicked tile at (${x}, ${y})`);
         const tile = board.getTile(x, y);
 
-        if (!tile.isEmpty()) return;
+        if (!tile) {
+            console.log("Could not get tile from board");
+            return;
+        }
 
+        if (!tile.isEmpty()) {
+            console.log("Tile is not empty");
+            return;
+        }
+
+        console.log("Setting selected tile and showing popup");
         selectedTile = tile;
         showOrganismPopup();
     }
 
     function showOrganismPopup() {
+        console.log("Showing organism popup");
+        organismPopup.style.display = "block";  // Explicitly set display to block
         organismPopup.innerHTML = `
             <h2>Choose organism to create</h2>
             <div class="organism-options">
@@ -88,19 +110,30 @@ window.onload = () => {
             </div>
             <button id="closePopup">Cancel</button>
         `;
-        organismPopup.classList.remove("hidden");
+        
+        // Function to handle organism selection
+        const handleOrganismClick = async (event) => {
+            const button = event.target;
+            if (button.hasAttribute('data-org')) {
+                const orgName = button.getAttribute('data-org');
+                await addOrganism(orgName);
+                hidePopup();
+            }
+        };
 
-        organismPopup.querySelectorAll(".organism-options button").forEach(button => {
-            button.addEventListener("click", () => {
-                const orgName = button.getAttribute("data-org");
-                addOrganism(orgName);
-                organismPopup.classList.add("hidden");
-            });
-        });
+        // Function to hide popup and clean up listeners
+        const hidePopup = () => {
+            organismPopup.style.display = "none";
+            organismPopup.querySelector('.organism-options').removeEventListener('click', handleOrganismClick);
+            organismPopup.querySelector('#closePopup').removeEventListener('click', hidePopup);
+        };
 
-        organismPopup.querySelector("#closePopup").addEventListener("click", () => {
-            organismPopup.classList.add("hidden");
-        });
+        // Add event listeners
+        organismPopup.querySelector('.organism-options').addEventListener('click', handleOrganismClick);
+        organismPopup.querySelector('#closePopup').addEventListener('click', hidePopup);
+
+        // Show the popup
+        organismPopup.style.display = "block";
     }
 
     async function addOrganism(orgName) {

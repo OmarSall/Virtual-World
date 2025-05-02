@@ -8,6 +8,10 @@ export class Animal extends Organism {
 
     // Default move behavior (random direction)
     move() {
+        if (!this.alive) {
+            return
+        }
+
         const directions = [
             { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
             { dx: -1, dy: 0 }, { dx: 1, dy: 0 },
@@ -41,6 +45,10 @@ export class Animal extends Organism {
     }
 
     fight(other) {
+        if (!this.alive || !other.alive) {
+            return;
+        }
+
         const myTile = this.board.getTile(this.x, this.y);
         const otherTile = this.board.getTile(other.x, other.y);
 
@@ -51,10 +59,19 @@ export class Animal extends Organism {
         } else {
             this.alive = false;
             myTile.removeOrganism();
+            // Ensure the organism is removed from the board's list
+            const index = this.board.organisms.indexOf(this);
+            if (index > -1) {
+                this.board.organisms.splice(index, 1);
+            }
         }
     }
 
     mate() {
+        if (!this.alive) {
+            return;
+        }
+
         const adjacentTiles = [
             { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
             { dx: -1, dy: 0 }, { dx: 1, dy: 0 },
@@ -78,7 +95,20 @@ export class Animal extends Organism {
         return new Animal(this.strength, this.initiative, this.board);
     }
 
+    consume(plant) {
+        if (!this.alive) {
+            return;
+        }
+
+        // Default behavior: just consume the plant
+        // Specific plants can override their effects when consumed
+        console.log(`${this.constructor.name} consumed ${plant.constructor.name}`);
+    }
+
     action() {
+        if (!this.alive) {
+            return;
+        }
         this.move();
         this.mate();
     }
