@@ -59,31 +59,42 @@ export class Organism {
             const div = document.createElement("div");
             div.className = "organism";
             
-             // Always try to use image if imagePath is provided
             if (this.imagePath) {
+                console.log(`Attempting to render ${this.getName()} with image path: ${this.imagePath}`);
                 const img = document.createElement("img");
-                img.src = "./" + this.imagePath;  // Use imagePath directly
+                img.src = this.imagePath;  // Use the provided path as-is
                 img.alt = this.getName();
-
-                // Add onload handler to confirm successful loadin
+                
+                // Add onload handler to confirm successful loading
+                img.onload = () => {
+                    console.log(`✅ Image loaded successfully for ${this.getName()}: ${this.imagePath}`);
+                };
+                
+                // Enhanced error handling with detailed logging
                 img.onerror = () => {
-                    console.error(`Failed to load image: ${this.imagePath}`);
-                    div.textContent = this.getName().charAt(0);
-
+                    console.error(`❌ Failed to load image for ${this.getName()}: ${this.imagePath}`);
+                    console.log(`💡 Debug info for ${this.getName()}:`);
+                    console.log(`   - Class name: ${this.constructor.name}`);
+                    console.log(`   - Current path: ${this.imagePath}`);
+                    console.log(`   - Window location: ${window.location.href}`);
                     console.log('Attempting to load image with absolute path...');
-                    // Try with absolute path
-                    const absolutePath = window.location.origin + '/' + this.imagePath;
+                    
+                    // Try with absolute path (remove any existing ./ prefix)
+                    const cleanPath = this.imagePath.replace(/^\.\//, '');
+                    const absolutePath = window.location.origin + '/' + cleanPath;
+                    console.log(`   - Trying absolute path: ${absolutePath}`);
                     img.src = absolutePath;
-
+                    
                     // If absolute path also fails, fall back to text
                     img.onerror = () => {
-                        console.error(`Failed to load image with absolute path: ${absolutePath}`);
+                        console.error(`❌ Failed to load image with absolute path for ${this.getName()}: ${absolutePath}`);
+                        console.log(`⚠️ Falling back to text representation for ${this.getName()}`);
                         div.textContent = this.getName().charAt(0);
                     };
                 };
+                
                 div.appendChild(img);
             } else {
-                // Fallback to text if no image
                 console.warn(`No image path provided for ${this.getName()}`);
                 div.textContent = this.getName().charAt(0);
             }

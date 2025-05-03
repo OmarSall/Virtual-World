@@ -3,8 +3,8 @@ import { Animal } from "./animal.js";
 import { Plant } from "./plant.js";
 
 export class Player extends Animal {
-    constructor(board) {
-        super(5, 4, board);
+    constructor(board, imagePath = "./images/player.svg") {
+        super(5, 4, board, imagePath);
         this.moveDirection = [0, 0];
     }
 
