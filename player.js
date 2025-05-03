@@ -6,11 +6,6 @@ export class Player extends Animal {
     constructor(board) {
         super(5, 4, board);
         this.moveDirection = [0, 0];
-        this.icon = "P";
-    }
-
-    getIcon() {
-        return "P";
     }
 
     setNextMove(dx, dy) {

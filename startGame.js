@@ -1,4 +1,5 @@
 import { Board } from "./board.js";
+import { organismClasses, playerClass } from "./organismCreation.js";
 
 window.onload = () => {
     const startButton = document.getElementById("start-game");
@@ -15,66 +16,71 @@ window.onload = () => {
     startButton.addEventListener("click", () => {
         console.log("Start button clicked!");
 
-        // Update instruction
         instructionText.innerText = "Click on a tile to choose starting position for the player.";
-
-        // Hide start button and show UI elements
         startButton.style.display = "none";
         instructions.classList.remove("hidden");
         numpadInstructions.classList.remove("hidden");
         numpadControls.classList.remove("hidden");
 
-        // Initialize board
         board = new Board(20, 20);
         board.createBoard();
         boardContainer.style.display = "grid";
         boardContainer.classList.remove("hidden");
 
-        // Place the player on click
-        boardContainer.addEventListener("click", function placePlayerFirst(event) {
+        const placePlayerFirst = (event) => {
             if (event.target.classList.contains("tile")) {
                 const x = parseInt(event.target.dataset.x);
                 const y = parseInt(event.target.dataset.y);
 
-                board.placePlayer(x, y);
+                const tile = board.getTile(x, y);
+                if (!tile || !tile.isEmpty()) {
+                    return;
+                }
 
+                // Create player with explicit image path
+                const player = new playerClass.classRef(board, "./images/player.svg");
+                tile.setOrganism(player);
+                board.organisms.push(player);
+                board.player = player; // Set the board's player reference
+                board.sortOrganismsByInitiative();
                 instructionText.innerText = "Use Numpad to move. Click empty tile to add an organism.";
                 boardContainer.removeEventListener("click", placePlayerFirst);
 
-                board.enableGame(); // Allows movement
-
-                // Remove any existing click listener first
-                boardContainer.removeEventListener("click", onBoardClick);
-                // Add listener for adding organisms on empty tile click
-                boardContainer.addEventListener("click", onBoardClick);
-                console.log("Added click listener for organism creation");
+                // Enable game controls first
+                board.enableGame();
+                
+                // Wait a brief moment before enabling organism creation
+                setTimeout(() => {
+                    boardContainer.addEventListener("click", onBoardClick);
+                    console.log("Added click listener for organism creation");
+                }, 100);
             }
-        });
+        };
+
+        boardContainer.addEventListener("click", placePlayerFirst);
+    });
+
+    // Handle organism creation popup clicks
+    organismPopup.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-org]");
+        if (button) {
+            const orgName = button.getAttribute("data-org");
+            addOrganism(orgName);
+            hidePopup();
+        } else if (event.target.id === "closePopup") {
+            hidePopup();
+        }
     });
 
     function onBoardClick(event) {
-        console.log("Board clicked!");
-        if (!event.target.classList.contains("tile")) {
-            console.log("Click target is not a tile");
-            return;
-        }
+        if (!event.target.classList.contains("tile")) return;
 
         const x = parseInt(event.target.dataset.x);
         const y = parseInt(event.target.dataset.y);
-        console.log(`Clicked tile at (${x}, ${y})`);
-        
         const tile = board.getTile(x, y);
-        if (!tile) {
-            console.log("Could not get tile from board");
-            return;
-        }
 
-        if (!tile.isEmpty()) {
-            console.log("Tile is not empty");
-            return;
-        }
+        if (!tile || !tile.isEmpty()) return;
 
-        console.log("Setting selected tile and showing popup");
         selectedTile = tile;
         showOrganismPopup();
     }
@@ -82,72 +88,63 @@ window.onload = () => {
     function showOrganismPopup() {
         try {
             console.log("Showing organism popup");
-            
-            // Create the popup content
-            const organisms = [
-                // Animals
-                { name: "Wolf", image: "images/wolf.svg" },
-                { name: "Sheep", image: "images/sheep.svg" },
-                { name: "Fox", image: "images/fox.svg" },
-                { name: "Antelope", image: "images/antelope.svg" },
-                { name: "Turtle", image: "images/turtle.svg" },
-                // Plants
-                { name: "Grass", image: "images/grass.svg" },
-                { name: "Guarana", image: "images/guarana.svg" },
-                { name: "PoisonBerry", image: "images/poison-berry.svg" },
-                { name: "SowThistle", image: "images/sow-thistle.svg" }
-            ];
 
             organismPopup.innerHTML = `
                 <button class="close-button" id="closePopup">×</button>
                 <h2>Choose organism to create</h2>
+                <div id="organism-error" class="error-message hidden"></div>
                 <div class="organism-options">
-                    ${organisms.map(org => `
-                        <button data-org="${org.name}" data-image="${org.image}">
-                            <img src="${org.image}" alt="${org.name}">
-                            <span>${org.name.replace(/([A-Z])/g, " $1").trim()}</span>
+                    ${organismClasses.map(({ name, classRef, image }) => `
+                        <button data-org="${name}" data-image="${image}">
+                            <img src="${image}" alt="${name}">
+                            <span>${name.replace(/([A-Z])/g, " $1").trim()}</span>
                         </button>
                     `).join("")}
                 </div>
             `;
 
-            // Function to handle organism selection
-            const handleOrganismClick = async (event) => {
-                const button = event.target;
-                if (button.hasAttribute("data-org")) {
-                    const orgName = button.getAttribute("data-org");
-                    await addOrganism(orgName);
-                    hidePopup();
-                }
-            };
-
-            // Function to hide popup and clean up listeners
-            const hidePopup = () => {
-                organismPopup.classList.add("hidden");
-                organismPopup.querySelector(".organism-options")
-                    .removeEventListener("click", handleOrganismClick);
-                organismPopup.querySelector("#closePopup")
-                    .removeEventListener("click", hidePopup);
-            };
-
-            // Add event listeners
-            organismPopup.querySelector(".organism-options")
-                .addEventListener("click", handleOrganismClick);
-            organismPopup.querySelector("#closePopup")
-                .addEventListener("click", hidePopup);
-
-            // Show the popup
             organismPopup.classList.remove("hidden");
         } catch (error) {
             console.error("Error showing organism popup:", error);
         }
     }
 
-    async function addOrganism(orgName) {
+    function hidePopup() {
+        organismPopup.classList.add("hidden");
+        const errorElement = document.getElementById("organism-error");
+        if (errorElement) {
+            errorElement.classList.add("hidden");
+            errorElement.textContent = "";
+        }
+    }
+
+    function showError(message) {
+        const errorElement = document.getElementById("organism-error");
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.classList.remove("hidden");
+            setTimeout(() => {
+                errorElement.classList.add("hidden");
+            }, 3000);
+        }
+    }
+
+    function addOrganism(orgName) {
         try {
-            const module = await import(`./species/${orgName.toLowerCase()}.js`);
-            const OrgClass = module[orgName];
-            const organism = new OrgClass(board);
+            const entry = organismClasses.find(({ name }) => name === orgName);
+            if (!entry) {
+                console.error(`Organism class not found for ${orgName}`);
+                showError("Selected organism type not found.");
+                return;
+            }
+            
+            if (!selectedTile || !selectedTile.isEmpty()) {
+                console.error("Invalid tile selection or tile is not empty");
+                showError("Please select an empty tile first.");
+                return;
+            }
+
+            const organism = new entry.classRef(board, entry.image);
             selectedTile.setOrganism(organism);
             board.organisms.push(organism);
             board.sortOrganismsByInitiative();

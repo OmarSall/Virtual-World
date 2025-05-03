@@ -183,6 +183,28 @@ body {
     margin-bottom: 20px;
 }
 
+.error-message {
+    color: #dc3545;
+    background-color: #ffe6e6;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    border: 1px solid #ffcccc;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .popup .organism-options {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));

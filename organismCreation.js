@@ -1,4 +1,4 @@
-// organismCreation.js
+import { Player } from "./player.js";
 import { Wolf } from "./species/wolf.js";
 import { Sheep } from "./species/sheep.js";
 import { Fox } from "./species/fox.js";
@@ -9,13 +9,19 @@ import { Guarana } from "./species/guarana.js";
 import { PoisonBerry } from "./species/poisonBerry.js";
 import { SowThistle } from "./species/sowThistle.js";
 
-/**
- * Array of available organism classes for random generation
- * @type {Array<typeof import("./organism.js").Organism>}
- */
-const organismClasses = [
-    Wolf, Sheep, Fox, Turtle, Antelope,
-    Grass, Guarana, PoisonBerry, SowThistle
+// Keep Player class separate as it's handled differently
+export const playerClass = { name: "Player", classRef: Player, image: "./images/player.svg" };
+
+export const organismClasses = [
+    { name: "Wolf", classRef: Wolf, image: "./images/wolf.svg" },
+    { name: "Sheep", classRef: Sheep, image: "./images/sheep.svg" },
+    { name: "Fox", classRef: Fox, image: "./images/fox.svg" },
+    { name: "Turtle", classRef: Turtle, image: "./images/turtle.svg" },
+    { name: "Antelope", classRef: Antelope, image: "./images/antelope.svg" },
+    { name: "Grass", classRef: Grass, image: "./images/grass.svg" },
+    { name: "Guarana", classRef: Guarana, image: "./images/guarana.svg" },
+    { name: "PoisonBerry", classRef: PoisonBerry, image: "./images/poison-berry.svg" },
+    { name: "SowThistle", classRef: SowThistle, image: "./images/sow-thistle.svg" }
 ];
 
 /**
@@ -25,17 +31,12 @@ const organismClasses = [
  * @throws {Error} If board is invalid or organism creation fails
  */
 export function getRandomOrganism(board) {
-    try {
-        if (!board) {
-            throw new Error('Board reference is required');
-        }
-
-        const OrgClass = organismClasses[Math.floor(Math.random() * organismClasses.length)];
-        return new OrgClass(board);
-    } catch (error) {
-        console.error('Error creating random organism:', error);
-        throw error;
+    if (!board) {
+        throw new Error("Board reference is required");
     }
+
+    const { classRef, image } = organismClasses[Math.floor(Math.random() * organismClasses.length)];
+    return new classRef(board, image);
 }
 
 /**
@@ -43,7 +44,7 @@ export function getRandomOrganism(board) {
  * @returns {Array<string>} Array of organism class names
  */
 export function getAvailableOrganisms() {
-    return organismClasses.map(OrgClass => OrgClass.name);
+    return organismClasses.map(({ name }) => name);
 }
 
 /**
@@ -53,15 +54,10 @@ export function getAvailableOrganisms() {
  * @returns {import("./organism.js").Organism|null} The created organism or null if not found
  */
 export function createOrganism(name, board) {
-    try {
-        if (!board) {
-            throw new Error("Board reference is required");
-        }
-
-        const OrgClass = organismClasses.find(cls => cls.name === name);
-        return OrgClass ? new OrgClass(board) : null;
-    } catch (error) {
-        console.error(`Error creating ${name}:`, error);
-        return null;
+    if (!board) {
+        throw new Error("Board reference is required");
     }
+
+    const entry = organismClasses.find(({ name: n }) => n === name);
+    return entry ? new entry.classRef(board, entry.image) : null;
 }
