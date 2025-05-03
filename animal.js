@@ -11,8 +11,8 @@ export class Animal extends Organism {
      * @param {number} initiative - The animal's turn priority
      * @param {Board} board - Reference to the game board
      */
-    constructor(strength, initiative, board) {
-        super(strength, initiative, board);
+    constructor(strength, initiative, board, imagePath = null) {
+        super(strength, initiative, board, imagePath);
     }
 
     /**

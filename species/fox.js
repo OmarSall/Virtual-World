@@ -2,52 +2,77 @@
 import { Animal } from "../animal.js";
 
 export class Fox extends Animal {
-    constructor(board) {
-        super(4, 7, board);  // Fox strength: 4, initiative: 7
-    }
-
-    getIcon() {
-        return 'F';
+    /**
+     * Creates a new Fox
+     * @param {Board} board - The game board
+     * @param {string} imagePath - Path to fox image
+     */
+    constructor(board, imagePath = null) {
+        super(3, 7, board, imagePath);  // Strength 3, Initiative 7
     }
 
     action() {
-        console.log("Fox action this.board:", this.board);
-        // Fox moves randomly, but it will avoid stronger organisms
+        if (!this.alive) return;
+        super.action(); // Increment age
+        this.move();
+        this.mate();
+    }
+
+    // Fox only moves to empty tiles or tiles with weaker organisms
+    move() {
+        if (!this.alive) return;
+
         const directions = [
             { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
             { dx: -1, dy: 0 }, { dx: 1, dy: 0 },
             { dx: -1, dy: 1 }, { dx: 0, dy: 1 }, { dx: 1, dy: 1 }
         ];
 
-        let moved = false;
+        // Shuffle directions for random movement
+        for (let i = directions.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [directions[i], directions[j]] = [directions[j], directions[i]];
+        }
 
-        // Try moving in each direction until we find a valid spot
-        for (let dir of directions) {
+        for (const dir of directions) {
             const newX = this.x + dir.dx;
             const newY = this.y + dir.dy;
             const targetTile = this.board.getTile(newX, newY);
 
-            if (targetTile) {
-                const targetOrganism = targetTile.organism;
+            if (!targetTile) continue;
 
-                // If the target tile is empty or has an organism weaker than or equal to the fox
-                if (targetTile.isEmpty() || (targetOrganism && targetOrganism.strength <= this.strength)) {
-                    // Move to the tile
-                    this.board.getTile(this.x, this.y).removeOrganism();
-                    targetTile.setOrganism(this);
-                    moved = true;
-                    break;  // Move to the first valid tile and stop looking
+            // Fox only moves to empty tiles or tiles with weaker organisms
+            if (targetTile.isEmpty() || 
+                (targetTile.organism instanceof Animal && 
+                 targetTile.organism.strength <= this.strength)) {
+                if (targetTile.organism) {
+                    this.fight(targetTile.organism);
+                } else {
+                    this.board.moveOrganism(this, newX, newY);
                 }
+                return;
             }
-        }
-
-        // If Fox didn't move, it may mate with another Fox if possible
-        if (!moved) {
-            this.mate();
         }
     }
 
     clone() {
-        return new Fox(this.board);
+        // Clone should use the same image as the parent
+        return new Fox(this.board, this.imagePath);
+    }
+
+    /**
+     * Gets the name of the organism
+     * @returns {string} The display name
+     */
+    getName() {
+        return 'Fox';
+    }
+
+    /**
+     * Gets the default image path if none provided
+     * @returns {string} Path to the default image
+     */
+    getDefaultImagePath() {
+        return 'images/fox.svg';
     }
 }

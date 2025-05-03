@@ -1,13 +1,13 @@
 import { Board } from "./board.js";
 
 window.onload = () => {
-    const startButton = document.getElementById('start-game');
-    const instructions = document.getElementById('instructions');
-    const instructionText = document.getElementById('instruction'); // Refers to the paragraph for instructions
-    const boardContainer = document.getElementById('board');
-    const numpadInstructions = document.getElementById('numpad-instructions');
-    const numpadControls = document.getElementById('numpad-controls');
-    const organismPopup = document.getElementById('organismPopup');
+    const startButton = document.getElementById("start-game");
+    const instructions = document.getElementById("instructions");
+    const instructionText = document.getElementById("instruction");
+    const boardContainer = document.getElementById("board");
+    const numpadInstructions = document.getElementById("numpad-instructions");
+    const numpadControls = document.getElementById("numpad-controls");
+    const organismPopup = document.getElementById("organismPopup");
 
     let board = null;
     let selectedTile = null;
@@ -84,27 +84,38 @@ window.onload = () => {
             console.log("Showing organism popup");
             
             // Create the popup content
+            const organisms = [
+                // Animals
+                { name: "Wolf", image: "images/wolf.svg" },
+                { name: "Sheep", image: "images/sheep.svg" },
+                { name: "Fox", image: "images/fox.svg" },
+                { name: "Antelope", image: "images/antelope.svg" },
+                { name: "Turtle", image: "images/turtle.svg" },
+                // Plants
+                { name: "Grass", image: "images/grass.svg" },
+                { name: "Guarana", image: "images/guarana.svg" },
+                { name: "PoisonBerry", image: "images/poison-berry.svg" },
+                { name: "SowThistle", image: "images/sow-thistle.svg" }
+            ];
+
             organismPopup.innerHTML = `
                 <button class="close-button" id="closePopup">×</button>
                 <h2>Choose organism to create</h2>
                 <div class="organism-options">
-                    <button data-org="Wolf">Wolf</button>
-                    <button data-org="Sheep">Sheep</button>
-                    <button data-org="Fox">Fox</button>
-                    <button data-org="Antelope">Antelope</button>
-                    <button data-org="Turtle">Turtle</button>
-                    <button data-org="Grass">Grass</button>
-                    <button data-org="Guarana">Guarana</button>
-                    <button data-org="PoisonBerry">Poison Berry</button>
-                    <button data-org="SowThistle">Sow Thistle</button>
+                    ${organisms.map(org => `
+                        <button data-org="${org.name}" data-image="${org.image}">
+                            <img src="${org.image}" alt="${org.name}">
+                            <span>${org.name.replace(/([A-Z])/g, " $1").trim()}</span>
+                        </button>
+                    `).join("")}
                 </div>
             `;
 
             // Function to handle organism selection
             const handleOrganismClick = async (event) => {
                 const button = event.target;
-                if (button.hasAttribute('data-org')) {
-                    const orgName = button.getAttribute('data-org');
+                if (button.hasAttribute("data-org")) {
+                    const orgName = button.getAttribute("data-org");
                     await addOrganism(orgName);
                     hidePopup();
                 }
@@ -112,23 +123,23 @@ window.onload = () => {
 
             // Function to hide popup and clean up listeners
             const hidePopup = () => {
-                organismPopup.classList.add('hidden');
-                organismPopup.querySelector('.organism-options')
-                    .removeEventListener('click', handleOrganismClick);
-                organismPopup.querySelector('#closePopup')
-                    .removeEventListener('click', hidePopup);
+                organismPopup.classList.add("hidden");
+                organismPopup.querySelector(".organism-options")
+                    .removeEventListener("click", handleOrganismClick);
+                organismPopup.querySelector("#closePopup")
+                    .removeEventListener("click", hidePopup);
             };
 
             // Add event listeners
-            organismPopup.querySelector('.organism-options')
-                .addEventListener('click', handleOrganismClick);
-            organismPopup.querySelector('#closePopup')
-                .addEventListener('click', hidePopup);
+            organismPopup.querySelector(".organism-options")
+                .addEventListener("click", handleOrganismClick);
+            organismPopup.querySelector("#closePopup")
+                .addEventListener("click", hidePopup);
 
             // Show the popup
-            organismPopup.classList.remove('hidden');
+            organismPopup.classList.remove("hidden");
         } catch (error) {
-            console.error('Error showing organism popup:', error);
+            console.error("Error showing organism popup:", error);
         }
     }
 

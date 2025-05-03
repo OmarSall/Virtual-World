@@ -74,7 +74,7 @@ export class Tile {
      */
     refresh() {
         try {
-            this.element.innerHTML = '';
+        this.element.innerHTML = "";
             if (this.organism) {
                 this.element.appendChild(this.organism.render());
             }

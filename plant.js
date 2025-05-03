@@ -9,8 +9,15 @@ export class Plant extends Organism {
      * Creates a new plant with 0 strength and initiative
      * @param {Board} board - Reference to the game board
      */
-    constructor(board) {
-        super(0, 0, board);
+    /**
+     * Creates a new plant
+     * @param {number} strength - The plant's strength (usually 0)
+     * @param {number} initiative - The plant's initiative (usually 0)
+     * @param {Board} board - Reference to the game board
+     * @param {string} imagePath - Path to plant image
+     */
+    constructor(strength, initiative, board, imagePath = null) {
+        super(strength, initiative, board, imagePath);
     }
 
     /**
@@ -100,7 +107,7 @@ export class Plant extends Organism {
                 this.board.organisms.splice(index, 1);
             }
         } catch (error) {
-            console.error('Error removing plant from board:', error);
+            console.error("Error removing plant from board:", error);
         }
     }
 }

@@ -1,34 +1,54 @@
+// species/turtle.js
 import { Animal } from "../animal.js";
 
 export class Turtle extends Animal {
-    constructor(board) {
-        super(2, 1, board);
-    }
-
-    getIcon() {
-        return 'T';
+    /**
+     * Creates a new Turtle
+     * @param {Board} board - The game board
+     * @param {string} imagePath - Path to turtle image
+     */
+    constructor(board, imagePath = null) {
+        super(2, 1, board, imagePath);  // Strength 2, Initiative 1
     }
 
     action() {
-        // Turtle won't move 75% of the time
+        if (!this.alive) return;
+        super.action(); // Increment age
+        
+        // Turtle has 75% chance to stay in place
         if (Math.random() > 0.75) {
-            this.move(); // Move 25% of the time
+            this.move();
         }
         this.mate();
     }
 
-    fight(other) {
-        // Defend against organisms with strength lower than 5
-        if (other.strength < 5) {
-            // Turtle blocks the attack, attacker fails
-            return;
-        } else {
-            // Otherwise, normal fight
-            super.fight(other);
-        }
+    /**
+     * Turtle reflects attacks from animals with strength 5 or less
+     * @param {Animal} attacker - The attacking animal
+     * @returns {boolean} True if attack was reflected
+     */
+    reflectAttack(attacker) {
+        return attacker.strength <= 5;
     }
 
     clone() {
-        return new Turtle(this.board);
+        // Clone should use the same image as the parent
+        return new Turtle(this.board, this.imagePath);
+    }
+
+    /**
+     * Gets the name of the organism
+     * @returns {string} The display name
+     */
+    getName() {
+        return 'Turtle';
+    }
+
+    /**
+     * Gets the default image path if none provided
+     * @returns {string} Path to the default image
+     */
+    getDefaultImagePath() {
+        return 'images/turtle.svg';
     }
 }

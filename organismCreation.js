@@ -55,7 +55,7 @@ export function getAvailableOrganisms() {
 export function createOrganism(name, board) {
     try {
         if (!board) {
-            throw new Error('Board reference is required');
+            throw new Error("Board reference is required");
         }
 
         const OrgClass = organismClasses.find(cls => cls.name === name);

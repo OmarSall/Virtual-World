@@ -12,7 +12,7 @@ body {
 
 /* Initially hidden elements */
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 #numpad-instructions {
@@ -85,7 +85,7 @@ body {
 }
 
 .tile:hover {
-    background-color: #55c344;
+    background-color: #f0f0f0;
 }
 
 /* Organism styling */
@@ -96,6 +96,63 @@ body {
     align-items: center;
     justify-content: center;
 }
+
+/* Board organism styling */
+.organism img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.organism:hover img {
+    transform: scale(1.1);
+}
+
+/* Popup organism buttons with images */
+.popup .organism-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+    padding: 10px;
+}
+
+.popup .organism-options button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 15px 10px;
+    background-color: white;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.popup .organism-options button img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.popup .organism-options button:hover {
+    border-color: #4CAF50;
+    background-color: #f8f8f8;
+    transform: translateY(-2px);
+}
+
+.popup .organism-options button:hover img {
+    transform: scale(1.1);
+}
+
+.popup .organism-options button span {
+    color: #333;
+    font-size: 12px;
+}
+
 
 #controls {
     margin-top: 20px;
@@ -112,12 +169,12 @@ body {
     border: 1px solid #ccc;
     padding: 20px;
     z-index: 1000;
-    width: 300px;
-    max-width: 90vw;  /* Responsive width */
+    width: 400px;
+    max-width: 90vw;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    margin: 0 auto;  /* Center horizontally */
+    display: block;
 }
 
 /* Ensure popup content is centered */
@@ -134,33 +191,43 @@ body {
 }
 
 /* Override hidden class for popup */
-.popup.hidden {
-    display: none;
+.hidden {
+    display: none !important;
 }
 
 .popup:not(.hidden) {
-    display: block;
+    display: block !important;
 }
 
 .popup .organism-options button {
     margin: 0;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
+    padding: 15px 10px;
+    background-color: white;
+    color: #333;
+    border: 2px solid #eee;
+    border-radius: 8px;
     font-size: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
     width: 100%;
     height: 100%;
     min-height: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .popup .organism-options button:hover {
-    background-color: #45a049;
+    background-color: #f8f8f8;
     transform: translateY(-2px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-color: #4CAF50;
+}
+
+.popup .organism-options button:hover img {
+    transform: scale(1.1);
 }
 
 .popup .close-button {

@@ -1,25 +1,36 @@
+// species/antelope.js
 import { Animal } from "../animal.js";
 
 export class Antelope extends Animal {
-    constructor(board) {
-        super(4, 4, board);
+    /**
+     * Creates a new Antelope
+     * @param {Board} board - The game board
+     * @param {string} imagePath - Path to antelope image
+     */
+    constructor(board, imagePath = null) {
+        super(4, 4, board, imagePath);  // Strength 4, Initiative 4
     }
 
-    getIcon() {
-        return 'A';
+    action() {
+        if (!this.alive) return;
+        super.action(); // Increment age
+        // Antelope moves twice per turn
+        this.move();
+        if (this.alive) this.move();
+        this.mate();
     }
 
-    // Override move to have double range movement
+    // Antelope can move two tiles at once
     move() {
+        if (!this.alive) return;
+
         const directions = [
-            { dx: -2, dy: -2 }, { dx: -1, dy: -2 }, { dx: 0, dy: -2 }, { dx: 1, dy: -2 }, { dx: 2, dy: -2 },
-            { dx: -2, dy: -1 }, { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 }, { dx: 2, dy: -1 },
-            { dx: -2, dy: 0 },  { dx: -1, dy: 0 },  { dx: 1, dy: 0 },  { dx: 2, dy: 0 },
-            { dx: -2, dy: 1 },  { dx: -1, dy: 1 },  { dx: 0, dy: 1 },  { dx: 1, dy: 1 },  { dx: 2, dy: 1 },
-            { dx: -2, dy: 2 },  { dx: -1, dy: 2 },  { dx: 0, dy: 2 },  { dx: 1, dy: 2 },  { dx: 2, dy: 2 }
+            { dx: -2, dy: -2 }, { dx: 0, dy: -2 }, { dx: 2, dy: -2 },
+            { dx: -2, dy: 0 }, { dx: 2, dy: 0 },
+            { dx: -2, dy: 2 }, { dx: 0, dy: 2 }, { dx: 2, dy: 2 }
         ];
 
-        // Shuffle directions to randomize movement attempts
+        // Shuffle directions for random movement
         for (let i = directions.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [directions[i], directions[j]] = [directions[j], directions[i]];
@@ -42,18 +53,26 @@ export class Antelope extends Animal {
                 }
             }
         }
-        // If no move possible, stay put
-    }
-
-    action() {
-        // 50% chance to flee (move), else stay put
-        if (Math.random() < 0.5) {
-            this.move();
-        }
-        this.mate();
     }
 
     clone() {
-        return new Antelope(this.board);
+        // Clone should use the same image as the parent
+        return new Antelope(this.board, this.imagePath);
+    }
+
+    /**
+     * Gets the name of the organism
+     * @returns {string} The display name
+     */
+    getName() {
+        return 'Antelope';
+    }
+
+    /**
+     * Gets the default image path if none provided
+     * @returns {string} Path to the default image
+     */
+    getDefaultImagePath() {
+        return 'images/antelope.svg';
     }
 }

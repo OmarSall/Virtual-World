@@ -2,35 +2,56 @@
 import { Plant } from "../plant.js";
 import { Animal } from "../animal.js";
 
-
-
 export class PoisonBerry extends Plant {
-    constructor(board) {
-        super(board);
+    /**
+     * Creates a new PoisonBerry plant
+     * @param {Board} board - The game board
+     * @param {string} imagePath - Path to poison berry image
+     */
+    constructor(board, imagePath = null) {
+        super(0, 0, board, imagePath);
     }
 
-    getIcon() {
-        return 'PB';
+    action() {
+        if (!this.alive) return;
+        super.action(); // Increment age
+        this.spread();
     }
 
     clone() {
-        return new PoisonBerry(this.board);
+        // Clone should use the same image as the parent
+        return new PoisonBerry(this.board, this.imagePath);
     }
 
     consume(organism) {
-        organism.alive = false;
+        if (organism?.alive) {
+            organism.alive = false;
+        }
     }
 
     // Overridden to remove organisms that eat the poison berry
     spread() {
         super.spread();
         const targetTile = this.board.getTile(this.x, this.y);
-        if (targetTile && targetTile.organism) {
-            const organism = targetTile.organism;
-            if (organism instanceof Animal) {
-                // Kill the animal
-                targetTile.removeOrganism();
-            }
+        if (targetTile?.organism instanceof Animal) {
+            targetTile.organism.alive = false;
+            targetTile.removeOrganism();
         }
+    }
+
+    /**
+     * Gets the name of the organism
+     * @returns {string} The display name
+     */
+    getName() {
+        return 'Poison Berry';
+    }
+
+    /**
+     * Gets the default image path if none provided
+     * @returns {string} Path to the default image
+     */
+    getDefaultImagePath() {
+        return 'images/poison-berry.svg';
     }
 }
