@@ -12,7 +12,9 @@ export class Guarana extends Plant {
     }
 
     action() {
-        if (!this.alive) return;
+        if (!this.alive) {
+            return;
+        }
         super.action(); // Increment age
         this.spread();
     }
@@ -27,7 +29,7 @@ export class Guarana extends Plant {
      * @param {Animal} organism - The organism consuming this plant
      */
     consume(organism) {
-        if (organism?.alive && typeof organism.strength === 'number') {
+        if (organism?.alive && typeof organism.strength === "number") {
             organism.strength += 3;
             console.log(`${organism.getName()}'s strength increased to ${organism.strength}`);
         }
@@ -38,7 +40,7 @@ export class Guarana extends Plant {
      * @returns {string} The display name
      */
     getName() {
-        return 'Guarana';
+        return "Guarana";
     }
 
     /**
@@ -46,6 +48,6 @@ export class Guarana extends Plant {
      * @returns {string} Path to the default image
      */
     getDefaultImagePath() {
-        return 'images/guarana.svg';
+        return "images/guarana.svg";
     }
 }

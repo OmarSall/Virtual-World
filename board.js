@@ -22,7 +22,7 @@ export class Board {
     constructor(rows, columns) {
         try {
             if (rows <= 0 || columns <= 0) {
-                throw new Error('Board dimensions must be positive');
+                throw new Error("Board dimensions must be positive");
             }
 
             this.rows = rows;
@@ -30,17 +30,17 @@ export class Board {
             this.grid = [];
             this.organisms = [];
             this.player = null;
-        this.boardContainer = document.getElementById("board");
+            this.boardContainer = document.getElementById("board");
             
             if (!this.boardContainer) {
-                throw new Error('Board container element not found');
+                throw new Error("Board container element not found");
             }
 
             this._keydownListener = null;
             this._keyupListener = null;
             this._keyHeld = false;
         } catch (error) {
-            console.error('Error creating board:', error);
+            console.error("Error creating board:", error);
             throw error;
         }
     }
@@ -76,7 +76,7 @@ export class Board {
                 }
             }
         } catch (error) {
-            console.error('Error creating board layout:', error);
+            console.error("Error creating board layout:", error);
             throw error;
         }
     }
@@ -102,7 +102,7 @@ export class Board {
             if (emptyTiles.length === 0) return null;
             return emptyTiles[Math.floor(Math.random() * emptyTiles.length)];
         } catch (error) {
-            console.error('Error getting random empty tile:', error);
+            console.error("Error getting random empty tile:", error);
             return null;
         }
     }
@@ -124,7 +124,7 @@ export class Board {
             this.sortOrganismsByInitiative();
             return true;
         } catch (error) {
-            console.error('Error placing player:', error);
+            console.error("Error placing player:", error);
             return false;
         }
     }
@@ -147,8 +147,10 @@ export class Board {
             // Create keydown listener
             this._keydownListener = (event) => {
                 try {
-                    if (!this.player?.alive || this._keyHeld) return;
-                    
+                    if (!this.player?.alive || this._keyHeld) {
+                      return;
+                    }
+
                     const key = event.code;
                     if (this.constructor.directionMap[key]) {
                         this._keyHeld = true;
@@ -174,7 +176,7 @@ export class Board {
             document.addEventListener("keydown", this._keydownListener);
             document.addEventListener("keyup", this._keyupListener);
         } catch (error) {
-            console.error('Error enabling game controls:', error);
+            console.error("Error enabling game controls:", error);
         }
     }
 
@@ -195,9 +197,9 @@ export class Board {
             }
 
             // Clean up dead organisms
-            this.organisms = this.organisms.filter(o => o.alive);
+            this.organisms = this.organisms.filter(organism => organism.alive);
         } catch (error) {
-            console.error('Error making turn:', error);
+            console.error("Error making turn:", error);
         }
     }
 
@@ -206,14 +208,14 @@ export class Board {
      */
     sortOrganismsByInitiative() {
         try {
-            this.organisms.sort((a, b) => {
-                if (b.initiative === a.initiative) {
-                    return b.age - a.age;
+            this.organisms.sort((firstOrganism, secondOrganism) => {
+                if (secondOrganism.initiative === firstOrganism.initiative) {
+                    return secondOrganism.age - firstOrganism.age;
                 }
-                return b.initiative - a.initiative;
+                return secondOrganism.initiative - firstOrganism.initiative;
             });
         } catch (error) {
-            console.error('Error sorting organisms:', error);
+            console.error("Error sorting organisms:", error);
         }
     }
 
@@ -226,19 +228,23 @@ export class Board {
      */
     moveOrganism(organism, newX, newY) {
         try {
-            if (!organism?.alive) return false;
+            if (!organism?.alive) {
+              return false;
+            }
 
             const oldTile = this.getTile(organism.x, organism.y);
             const newTile = this.getTile(newX, newY);
 
-            if (!newTile || !oldTile) return false;
-
+            if (!newTile || !oldTile) {
+              return false;
+            }
+            
             oldTile.removeOrganism();
             newTile.setOrganism(organism);
             organism.setPosition(newX, newY);
             return true;
         } catch (error) {
-            console.error('Error moving organism:', error);
+            console.error("Error moving organism:", error);
             return false;
         }
     }
@@ -263,7 +269,7 @@ export class Board {
             }
             return null;
         } catch (error) {
-            console.error('Error finding adjacent empty tile:', error);
+            console.error("Error finding adjacent empty tile:", error);
             return null;
         }
     }

@@ -10,11 +10,11 @@ export class Tile {
      */
     constructor(x, y) {
         try {
-            if (typeof x !== 'number' || typeof y !== 'number') {
-                throw new Error('Coordinates must be numbers');
+            if (typeof x !== "number" || typeof y !== "number") {
+                throw new Error("Coordinates must be numbers");
             }
             if (x < 0 || y < 0) {
-                throw new Error('Coordinates cannot be negative');
+                throw new Error("Coordinates cannot be negative");
             }
 
             this.x = x;
@@ -26,7 +26,7 @@ export class Tile {
             this.element.dataset.x = x;
             this.element.dataset.y = y;
         } catch (error) {
-            console.error('Error creating tile:', error);
+            console.error("Error creating tile:", error);
             throw error;
         }
     }
@@ -44,7 +44,7 @@ export class Tile {
             }
             this.refresh();
         } catch (error) {
-            console.error('Error setting organism:', error);
+            console.error("Error setting organism:", error);
             throw error;
         }
     }
@@ -57,7 +57,7 @@ export class Tile {
             this.organism = null;
             this.refresh();
         } catch (error) {
-            console.error('Error removing organism:', error);
+            console.error("Error removing organism:", error);
         }
     }
 
@@ -79,7 +79,7 @@ export class Tile {
                 this.element.appendChild(this.organism.render());
             }
         } catch (error) {
-            console.error('Error refreshing tile:', error);
+            console.error("Error refreshing tile:", error);
         }
     }
 

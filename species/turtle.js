@@ -12,7 +12,9 @@ export class Turtle extends Animal {
     }
 
     action() {
-        if (!this.alive) return;
+        if (!this.alive) {
+            return;
+        }
         super.action(); // Increment age
         
         // Turtle has 75% chance to stay in place
@@ -41,7 +43,7 @@ export class Turtle extends Animal {
      * @returns {string} The display name
      */
     getName() {
-        return 'Turtle';
+        return "Turtle";
     }
 
     /**
@@ -49,6 +51,6 @@ export class Turtle extends Animal {
      * @returns {string} Path to the default image
      */
     getDefaultImagePath() {
-        return 'images/turtle.svg';
+        return "images/turtle.svg";
     }
 }

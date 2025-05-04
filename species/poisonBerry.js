@@ -13,7 +13,9 @@ export class PoisonBerry extends Plant {
     }
 
     action() {
-        if (!this.alive) return;
+        if (!this.alive) {
+            return;
+        }
         super.action(); // Increment age
         this.spread();
     }
@@ -44,7 +46,7 @@ export class PoisonBerry extends Plant {
      * @returns {string} The display name
      */
     getName() {
-        return 'Poison Berry';
+        return "Poison Berry";
     }
 
     /**
@@ -52,6 +54,6 @@ export class PoisonBerry extends Plant {
      * @returns {string} Path to the default image
      */
     getDefaultImagePath() {
-        return 'images/poison-berry.svg';
+        return "images/poison-berry.svg";
     }
 }

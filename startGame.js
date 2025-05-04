@@ -73,14 +73,16 @@ window.onload = () => {
     });
 
     function onBoardClick(event) {
-        if (!event.target.classList.contains("tile")) return;
-
+        if (!event.target.classList.contains("tile")) {
+            return;
+        }
         const x = parseInt(event.target.dataset.x);
         const y = parseInt(event.target.dataset.y);
         const tile = board.getTile(x, y);
 
-        if (!tile || !tile.isEmpty()) return;
-
+        if (!tile || !tile.isEmpty()) {
+            return;
+        }
         selectedTile = tile;
         showOrganismPopup();
     }

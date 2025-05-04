@@ -21,7 +21,9 @@ export class Animal extends Organism {
      */
     move() {
         try {
-            if (!this.alive) return false;
+            if (!this.alive) {
+                return false;
+            }
 
             const directions = [
                 { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
@@ -54,7 +56,7 @@ export class Animal extends Organism {
             }
             return false; // No valid move found
         } catch (error) {
-            console.error('Error during animal movement:', error);
+            console.error("Error during animal movement:", error);
             return false;
         }
     }
@@ -72,7 +74,7 @@ export class Animal extends Organism {
             const otherTile = this.board.getTile(other.x, other.y);
 
             if (!myTile || !otherTile) {
-                throw new Error('Invalid tile positions for combat');
+                throw new Error("Invalid tile positions for combat");
             }
 
             if (this.strength >= other.strength) {
@@ -86,7 +88,7 @@ export class Animal extends Organism {
             }
             return true;
         } catch (error) {
-            console.error('Error during combat:', error);
+            console.error("Error during combat:", error);
             return false;
         }
     }
@@ -97,14 +99,16 @@ export class Animal extends Organism {
      */
     mate() {
         try {
-            if (!this.alive) return false;
+            if (!this.alive) {
+                return false;
+            }
 
             const adjacentTiles = [
                 { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
                 { dx: -1, dy: 0 }, { dx: 1, dy: 0 },
                 { dx: -1, dy: 1 }, { dx: 0, dy: 1 }, { dx: 1, dy: 1 }
             ];
-
+             // Loop through each direction to find an adjacent organism of the same species
             for (const dir of adjacentTiles) {
                 const newX = this.x + dir.dx;
                 const newY = this.y + dir.dy;
@@ -118,7 +122,7 @@ export class Animal extends Organism {
             }
             return false;
         } catch (error) {
-            console.error('Error during mating:', error);
+            console.error("Error during mating:", error);
             return false;
         }
     }
@@ -164,12 +168,14 @@ export class Animal extends Organism {
      */
     action() {
         try {
-            if (!this.alive) return;
+            if (!this.alive) {
+                return;
+            }
             super.action(); // Increment age
             this.move();
             this.mate();
         } catch (error) {
-            console.error('Error in animal action:', error);
+            console.error("Error in animal action:", error);
         }
     }
 }

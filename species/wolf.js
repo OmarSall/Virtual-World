@@ -27,6 +27,6 @@ export class Wolf extends Animal {
      * @returns {string} The display name
      */
     getName() {
-        return 'Wolf';
+        return "Wolf";
     }
 }

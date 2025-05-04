@@ -24,7 +24,7 @@ export class Player extends Animal {
             const targetTile = this.board.getTile(newX, newY);
 
             if (!currentTile || !targetTile) {
-                console.warn('Invalid tile coordinates');
+                console.warn("Invalid tile coordinates");
                 return false;
             }
 
@@ -33,7 +33,7 @@ export class Player extends Animal {
             this.setPosition(newX, newY);
             return true;
         } catch (error) {
-            console.error('Error during movement:', error);
+            console.error("Error during movement:", error);
             return false;
         }
     }
@@ -48,7 +48,7 @@ export class Player extends Animal {
                 this.board.organisms.splice(index, 1);
             }
         } catch (error) {
-            console.error('Error removing from board:', error);
+            console.error("Error removing from board:", error);
         }
     }
 
@@ -57,10 +57,14 @@ export class Player extends Animal {
      */
     action() {
         try {
-            if (!this.alive) return;
+            if (!this.alive) {
+                return;
+            }
 
             const [dx, dy] = this.moveDirection;
-            if (dx === 0 && dy === 0) return;
+            if (dx === 0 && dy === 0) {
+                return;
+            }
 
             const newX = this.x + dx;
             const newY = this.y + dy;
@@ -109,7 +113,7 @@ export class Player extends Animal {
 
             this.moveDirection = [0, 0];
         } catch (error) {
-            console.error('Error in player action:', error);
+            console.error("Error in player action:", error);
             this.moveDirection = [0, 0];
         }
     }

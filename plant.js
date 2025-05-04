@@ -27,7 +27,9 @@ export class Plant extends Organism {
      */
     spread() {
         try {
-            if (!this.alive) return false;
+            if (!this.alive) {
+                return false;
+            }
 
             const directions = [
                 { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
@@ -51,7 +53,7 @@ export class Plant extends Organism {
             }
             return false;
         } catch (error) {
-            console.error('Error during plant spreading:', error);
+            console.error("Error during plant spreading:", error);
             return false;
         }
     }
@@ -64,7 +66,7 @@ export class Plant extends Organism {
         try {
             return new Plant(this.board);
         } catch (error) {
-            console.error('Error cloning plant:', error);
+            console.error("Error cloning plant:", error);
             throw error;
         }
     }
@@ -75,11 +77,13 @@ export class Plant extends Organism {
      */
     consume(organism) {
         try {
-            if (!this.alive || !organism?.alive) return;
+            if (!this.alive || !organism?.alive) {
+                return;
+            }
             // By default, plants have no special effect when consumed
             console.log(`${organism.constructor.name} consumed ${this.constructor.name}`);
         } catch (error) {
-            console.error('Error during plant consumption:', error);
+            console.error("Error during plant consumption:", error);
         }
     }
 
@@ -89,11 +93,14 @@ export class Plant extends Organism {
      */
     action() {
         try {
-            if (!this.alive) return;
+            if (!this.alive) {
+                return;
+            }
+
             super.action(); // Increment age
             this.spread();
         } catch (error) {
-            console.error('Error in plant action:', error);
+            console.error("Error in plant action:", error);
         }
     }
 

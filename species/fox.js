@@ -12,7 +12,10 @@ export class Fox extends Animal {
     }
 
     action() {
-        if (!this.alive) return;
+        if (!this.alive) {
+            return;
+        }
+
         super.action(); // Increment age
         this.move();
         this.mate();
@@ -39,8 +42,9 @@ export class Fox extends Animal {
             const newY = this.y + dir.dy;
             const targetTile = this.board.getTile(newX, newY);
 
-            if (!targetTile) continue;
-
+            if (!targetTile) {
+                continue;
+            }
             // Fox only moves to empty tiles or tiles with weaker organisms
             if (targetTile.isEmpty() || 
                 (targetTile.organism instanceof Animal && 
@@ -65,7 +69,7 @@ export class Fox extends Animal {
      * @returns {string} The display name
      */
     getName() {
-        return 'Fox';
+        return "Fox";
     }
 
     /**
@@ -73,6 +77,6 @@ export class Fox extends Animal {
      * @returns {string} Path to the default image
      */
     getDefaultImagePath() {
-        return 'images/fox.svg';
+        return "images/fox.svg";
     }
 }

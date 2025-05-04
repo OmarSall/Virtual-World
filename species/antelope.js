@@ -12,17 +12,23 @@ export class Antelope extends Animal {
     }
 
     action() {
-        if (!this.alive) return;
+        if (!this.alive) {
+            return;
+        }
         super.action(); // Increment age
         // Antelope moves twice per turn
         this.move();
-        if (this.alive) this.move();
-        this.mate();
+        if (this.alive) {
+            this.move();
+            this.mate();
+        }
     }
 
     // Antelope can move two tiles at once
     move() {
-        if (!this.alive) return;
+        if (!this.alive) {
+            return;
+        }
 
         const directions = [
             { dx: -2, dy: -2 }, { dx: 0, dy: -2 }, { dx: 2, dy: -2 },
@@ -41,7 +47,9 @@ export class Antelope extends Animal {
             const newY = this.y + dir.dy;
             const targetTile = this.board.getTile(newX, newY);
 
-            if (!targetTile) continue;
+            if (!targetTile) {
+                continue;
+            }
 
             if (targetTile.isEmpty()) {
                 this.board.moveOrganism(this, newX, newY);
@@ -55,6 +63,40 @@ export class Antelope extends Animal {
         }
     }
 
+    fight(opponent) {
+        if (Math.random() < 0.5) {
+            // Try to escape
+            const escapeDirs = [
+                { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
+                { dx: -1, dy: 0 }, { dx: 1, dy: 0 },
+                { dx: -1, dy: 1 }, { dx: 0, dy: 1 }, { dx: 1, dy: 1 }
+            ];
+    
+            // Shuffle escape directions
+            for (let i = escapeDirs.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [escapeDirs[i], escapeDirs[j]] = [escapeDirs[j], escapeDirs[i]];
+            }
+    
+            for (const dir of escapeDirs) {
+                const newX = this.x + dir.dx;
+                const newY = this.y + dir.dy;
+                const tile = this.board.getTile(newX, newY);
+    
+                if (tile && tile.isEmpty()) {
+                    this.board.moveOrganism(this, newX, newY);
+                    console.log(`${this.getName()} fled from ${opponent.getName()}`);
+                    return false; // Fight was avoided
+                }
+            }
+    
+            console.log(`${this.getName()} tried to flee but was cornered.`);
+        }
+    
+        // Could not flee or didn't attempt — do normal fight
+        return super.fight(opponent);
+    }
+
     clone() {
         // Clone should use the same image as the parent
         return new Antelope(this.board, this.imagePath);
@@ -65,7 +107,7 @@ export class Antelope extends Animal {
      * @returns {string} The display name
      */
     getName() {
-        return 'Antelope';
+        return "Antelope";
     }
 
     /**
@@ -73,6 +115,6 @@ export class Antelope extends Animal {
      * @returns {string} Path to the default image
      */
     getDefaultImagePath() {
-        return 'images/antelope.svg';
+        return "images/antelope.svg";
     }
 }

@@ -12,7 +12,7 @@ body {
 
 /* Initially hidden elements */
 .hidden {
-    display: none !important;
+    display: none;
 }
 
 #numpad-instructions {
@@ -62,7 +62,6 @@ body {
 /* Board styling */
 #board {
     display: none; /* Set to hidden initially */
-    /* Then only switch to grid via JavaScript when needed */
     grid-template-columns: repeat(20, 30px);
     grid-template-rows: repeat(20, 30px);
     gap: 1px;
@@ -85,7 +84,7 @@ body {
 }
 
 .tile:hover {
-    background-color: #f0f0f0;
+    background-color: #a8e193;
 }
 
 /* Organism styling */
@@ -212,13 +211,12 @@ body {
     margin-bottom: 20px;
 }
 
-/* Override hidden class for popup */
 .hidden {
-    display: none !important;
+    display: none;
 }
 
 .popup:not(.hidden) {
-    display: block !important;
+    display: block;
 }
 
 .popup .organism-options button {

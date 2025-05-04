@@ -12,7 +12,9 @@ export class Sheep extends Animal {
     }
 
     action() {
-        if (!this.alive) return;
+        if (!this.alive) {
+            return;
+        }
         super.action(); // Increment age
         this.move();
         this.mate();
@@ -28,7 +30,7 @@ export class Sheep extends Animal {
      * @returns {string} The display name
      */
     getName() {
-        return 'Sheep';
+        return "Sheep";
     }
 
     /**
@@ -36,6 +38,6 @@ export class Sheep extends Animal {
      * @returns {string} Path to the default image
      */
     getDefaultImagePath() {
-        return 'images/sheep.svg';
+        return "images/sheep.svg";
     }
 }

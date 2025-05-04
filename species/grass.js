@@ -12,7 +12,9 @@ export class Grass extends Plant {
     }
 
     action() {
-        if (!this.alive) return;
+        if (!this.alive) {
+            return;
+        }
         super.action(); // Increment age
         this.spread();
     }
@@ -27,7 +29,7 @@ export class Grass extends Plant {
      * @returns {string} The display name
      */
     getName() {
-        return 'Grass';
+        return "Grass";
     }
 
     /**
@@ -35,6 +37,6 @@ export class Grass extends Plant {
      * @returns {string} Path to the default image
      */
     getDefaultImagePath() {
-        return 'images/grass.svg';
+        return "images/grass.svg";
     }
 }

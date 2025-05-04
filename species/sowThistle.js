@@ -12,7 +12,9 @@ export class SowThistle extends Plant {
     }
 
     action() {
-        if (!this.alive) return;
+        if (!this.alive) {
+            return;
+        }
         super.action(); // Increment age
         
         // Sow Thistle attempts to spread three times
@@ -33,7 +35,7 @@ export class SowThistle extends Plant {
      * @returns {string} The display name
      */
     getName() {
-        return 'Sow Thistle';
+        return "Sow Thistle";
     }
 
     /**
@@ -41,7 +43,7 @@ export class SowThistle extends Plant {
      * @returns {string} Path to the default image
      */
     getDefaultImagePath() {
-        return 'images/sow-thistle.svg';
+        return "images/sow-thistle.svg";
     }
 
     /**
