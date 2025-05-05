@@ -90,12 +90,4 @@ export class Tile {
     getPosition() {
         return { x: this.x, y: this.y };
     }
-
-    /**
-     * Gets the tile's DOM element
-     * @returns {HTMLDivElement} The tile's DOM element
-     */
-    getElement() {
-        return this.element;
-    }
 }

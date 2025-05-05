@@ -1,5 +1,8 @@
 // species/grass.js
 import { Plant } from "../plant.js";
+import { PLANT_CONFIG } from "./config.js";
+
+const CONFIG = PLANT_CONFIG.Grass;
 
 export class Grass extends Plant {
     /**
@@ -8,7 +11,7 @@ export class Grass extends Plant {
      * @param {string} imagePath - Path to grass image
      */
     constructor(board, imagePath = null) {
-        super(0, 0, board, imagePath);
+        super(CONFIG.STRENGTH, CONFIG.INITIATIVE, board, imagePath);
     }
 
     action() {

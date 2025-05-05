@@ -1,5 +1,8 @@
 // species/sheep.js
 import { Animal } from "../animal.js";
+import { ANIMAL_CONFIG } from "./config.js";
+
+const CONFIG = ANIMAL_CONFIG.Sheep;
 
 export class Sheep extends Animal {
     /**
@@ -8,7 +11,7 @@ export class Sheep extends Animal {
      * @param {string} imagePath - Path to sheep image
      */
     constructor(board, imagePath = null) {
-        super(4, 4, board, imagePath);  // Strength 4, Initiative 4
+        super(CONFIG.STRENGTH, CONFIG.INITIATIVE, board, imagePath);  // Strength 4, Initiative 4
     }
 
     action() {

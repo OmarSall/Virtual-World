@@ -1,5 +1,8 @@
 // species/turtle.js
 import { Animal } from "../animal.js";
+import { ANIMAL_CONFIG } from "./config.js";
+
+const CONFIG = ANIMAL_CONFIG.Turtle;
 
 export class Turtle extends Animal {
     /**
@@ -8,7 +11,7 @@ export class Turtle extends Animal {
      * @param {string} imagePath - Path to turtle image
      */
     constructor(board, imagePath = null) {
-        super(2, 1, board, imagePath);  // Strength 2, Initiative 1
+        super(CONFIG.STRENGTH, CONFIG.INITIATIVE, board, imagePath);  // Strength 2, Initiative 1
     }
 
     action() {
@@ -18,7 +21,7 @@ export class Turtle extends Animal {
         super.action(); // Increment age
         
         // Turtle has 75% chance to stay in place
-        if (Math.random() > 0.75) {
+        if (Math.random() < CONFIG.MOVE_CHANCE) {
             this.move();
         }
         this.mate();
@@ -30,7 +33,7 @@ export class Turtle extends Animal {
      * @returns {boolean} True if attack was reflected
      */
     reflectAttack(attacker) {
-        return attacker.strength <= 5;
+        return attacker.strength <= CONFIG.REFLECT_THRESHOLD;
     }
 
     clone() {

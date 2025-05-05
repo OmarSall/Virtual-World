@@ -1,5 +1,6 @@
 import { Board } from "./board.js";
 import { organismClasses, playerClass } from "./organismCreation.js";
+import { showBoardContainer } from "./UI.js";
 
 window.onload = () => {
     const startButton = document.getElementById("start-game");
@@ -22,10 +23,15 @@ window.onload = () => {
         numpadInstructions.classList.remove("hidden");
         numpadControls.classList.remove("hidden");
 
-        board = new Board(20, 20);
-        board.createBoard();
-        boardContainer.style.display = "grid";
-        boardContainer.classList.remove("hidden");
+        try {
+            board = new Board(20, 20);
+            board.createBoard();
+        } catch (error) {
+            console.error("Failed to initialize the board:", error);
+            alert("Board failed to load. Check the console for details.");
+        }
+        
+        showBoardContainer(boardContainer);
 
         const placePlayerFirst = (event) => {
             if (event.target.classList.contains("tile")) {
@@ -42,7 +48,7 @@ window.onload = () => {
                 tile.setOrganism(player);
                 board.organisms.push(player);
                 board.player = player; // Set the board's player reference
-                board.sortOrganismsByInitiative();
+                // board.sortOrganismsByInitiative();
                 instructionText.innerText = "Use Numpad to move. Click empty tile to add an organism.";
                 boardContainer.removeEventListener("click", placePlayerFirst);
 
@@ -149,7 +155,7 @@ window.onload = () => {
             const organism = new entry.classRef(board, entry.image);
             selectedTile.setOrganism(organism);
             board.organisms.push(organism);
-            board.sortOrganismsByInitiative();
+            // board.sortOrganismsByInitiative();
         } catch (error) {
             console.error(`Error adding organism ${orgName}:`, error);
         }

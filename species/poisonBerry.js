@@ -1,6 +1,9 @@
 // species/poisonBerry.js
 import { Plant } from "../plant.js";
 import { Animal } from "../animal.js";
+import { PLANT_CONFIG } from "./config.js";
+
+const CONFIG = PLANT_CONFIG.PoisonBerry;
 
 export class PoisonBerry extends Plant {
     /**
@@ -9,7 +12,7 @@ export class PoisonBerry extends Plant {
      * @param {string} imagePath - Path to poison berry image
      */
     constructor(board, imagePath = null) {
-        super(0, 0, board, imagePath);
+        super(CONFIG.STRENGTH, CONFIG.INITIATIVE, board, imagePath);
     }
 
     action() {

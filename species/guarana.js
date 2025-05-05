@@ -30,7 +30,7 @@ export class Guarana extends Plant {
      */
     consume(organism) {
         if (organism?.alive && typeof organism.strength === "number") {
-            organism.strength += 3;
+            organism.strength += CONFIG.STRENGTH_BOOST;
             console.log(`${organism.getName()}'s strength increased to ${organism.strength}`);
         }
     }

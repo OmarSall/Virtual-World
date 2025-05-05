@@ -80,20 +80,12 @@ export class Player extends Animal {
             if (!targetTile.organism) {
                 this.moveToPosition(newX, newY);
             } else if (targetTile.organism instanceof Animal) {
-                // Handle combat
+                const currentTile = this.board.getTile(this.x, this.y)
                 const otherAnimal = targetTile.organism;
-                if (this.strength >= otherAnimal.strength) {
-                    otherAnimal.alive = false;
-                    targetTile.removeOrganism();
-                    this.moveToPosition(newX, newY);
-                } else {
-                    this.alive = false;
-                    const currentTile = this.board.getTile(this.x, this.y);
-                    if (currentTile) {
-                        currentTile.removeOrganism();
-                    }
-                    this.removeFromBoard();
+                if (currentTile) {
+                    currentTile.removeOrganism();
                 }
+                this.fight(otherAnimal);
             } else if (targetTile.organism instanceof Plant) {
                 // Handle plant interaction
                 targetTile.organism.consume(this);

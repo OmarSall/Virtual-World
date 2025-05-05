@@ -1,5 +1,8 @@
 // species/antelope.js
 import { Animal } from "../animal.js";
+import { ANIMAL_CONFIG } from "./config.js";
+
+const CONFIG = ANIMAL_CONFIG.Antelope;
 
 export class Antelope extends Animal {
     /**
@@ -7,8 +10,9 @@ export class Antelope extends Animal {
      * @param {Board} board - The game board
      * @param {string} imagePath - Path to antelope image
      */
+
     constructor(board, imagePath = null) {
-        super(4, 4, board, imagePath);  // Strength 4, Initiative 4
+        super(CONFIG.STRENGTH, CONFIG.INITIATIVE, board, imagePath);  // Strength 4, Initiative 4
     }
 
     action() {
@@ -64,7 +68,7 @@ export class Antelope extends Animal {
     }
 
     fight(opponent) {
-        if (Math.random() < 0.5) {
+        if (Math.random() < CONFIG.FLEE_CHANCE) {
             // Try to escape
             const escapeDirs = [
                 { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
@@ -108,13 +112,5 @@ export class Antelope extends Animal {
      */
     getName() {
         return "Antelope";
-    }
-
-    /**
-     * Gets the default image path if none provided
-     * @returns {string} Path to the default image
-     */
-    getDefaultImagePath() {
-        return "images/antelope.svg";
     }
 }

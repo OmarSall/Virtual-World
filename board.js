@@ -108,28 +108,6 @@ export class Board {
     }
 
     /**
-     * Places the player at specified coordinates
-     * @param {number} x - X coordinate
-     * @param {number} y - Y coordinate
-     * @returns {boolean} True if player was placed successfully
-     */
-    placePlayer(x, y) {
-        try {
-            const tile = this.getTile(x, y);
-            if (!tile || !tile.isEmpty()) return false;
-
-            this.player = new Player(this);
-            tile.setOrganism(this.player);
-            this.organisms.push(this.player);
-            this.sortOrganismsByInitiative();
-            return true;
-        } catch (error) {
-            console.error("Error placing player:", error);
-            return false;
-        }
-    }
-
-    /**
      * Enables game controls and movement
      */
     enableGame() {
@@ -238,7 +216,7 @@ export class Board {
             if (!newTile || !oldTile) {
               return false;
             }
-            
+
             oldTile.removeOrganism();
             newTile.setOrganism(organism);
             organism.setPosition(newX, newY);
@@ -265,7 +243,9 @@ export class Board {
             
             for (const [dx, dy] of dirs) {
                 const tile = this.getTile(x + dx, y + dy);
-                if (tile?.isEmpty()) return tile;
+                if (tile?.isEmpty()) {
+                  return tile;
+                }
             }
             return null;
         } catch (error) {

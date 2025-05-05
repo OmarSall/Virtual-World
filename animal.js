@@ -103,23 +103,13 @@ export class Animal extends Organism {
                 return false;
             }
 
-            const adjacentTiles = [
-                { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
-                { dx: -1, dy: 0 }, { dx: 1, dy: 0 },
-                { dx: -1, dy: 1 }, { dx: 0, dy: 1 }, { dx: 1, dy: 1 }
-            ];
-             // Loop through each direction to find an adjacent organism of the same species
-            for (const dir of adjacentTiles) {
-                const newX = this.x + dir.dx;
-                const newY = this.y + dir.dy;
-                const targetTile = this.board.getTile(newX, newY);
-
-                if (targetTile?.isEmpty()) {
-                    const offspring = this.clone();
-                    targetTile.setOrganism(offspring);
-                    return true;
-                }
+            const emptyTile = this.board.getAdjacentEmptyTile(this.x, this.y);
+            if (emptyTile) {
+                const offspring = this.clone();
+                emptyTile.setOrganism(offspring);
+                return true;
             }
+
             return false;
         } catch (error) {
             console.error("Error during mating:", error);
@@ -133,19 +123,6 @@ export class Animal extends Organism {
      */
     clone() {
         return new Animal(this.strength, this.initiative, this.board);
-    }
-
-    /**
-     * Consumes a plant
-     * @param {Plant} plant - The plant to consume
-     */
-    consume(plant) {
-        try {
-            if (!this.alive) return;
-            console.log(`${this.constructor.name} consumed ${plant.constructor.name}`);
-        } catch (error) {
-            console.error('Error during consumption:', error);
-        }
     }
 
     /**
