@@ -57,14 +57,15 @@ export class Antelope extends Animal {
 
             if (targetTile.isEmpty()) {
                 this.board.moveOrganism(this, newX, newY);
-                return;
+                return true;
             } else if (targetTile.organism instanceof Animal) {
                 if (targetTile.organism.strength <= this.strength) {
                     this.fight(targetTile.organism);
-                    return;
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     fight(opponent) {

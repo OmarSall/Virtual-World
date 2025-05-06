@@ -1,6 +1,6 @@
 import { Board } from "./board.js";
 import { organismClasses, playerClass } from "./organismCreation.js";
-import { showBoardContainer } from "./UI.js";
+import { showBoardContainer, initializeGameUI } from "./UI.js";
 
 window.onload = () => {
     const startButton = document.getElementById("start-game");
@@ -13,15 +13,12 @@ window.onload = () => {
 
     let board = null;
     let selectedTile = null;
+    let placePlayerFirstHandler = null;
 
     startButton.addEventListener("click", () => {
         console.log("Start button clicked!");
 
-        instructionText.innerText = "Click on a tile to choose starting position for the player.";
-        startButton.style.display = "none";
-        instructions.classList.remove("hidden");
-        numpadInstructions.classList.remove("hidden");
-        numpadControls.classList.remove("hidden");
+        initializeGameUI(instructionText, startButton, instructions, numpadInstructions, numpadControls);
 
         try {
             board = new Board(20, 20);
@@ -33,37 +30,10 @@ window.onload = () => {
         
         showBoardContainer(boardContainer);
 
-        const placePlayerFirst = (event) => {
-            if (event.target.classList.contains("tile")) {
-                const x = parseInt(event.target.dataset.x);
-                const y = parseInt(event.target.dataset.y);
+        placePlayerFirstHandler = (event) => 
+            placePlayerFirst(event, board, boardContainer, instructionText, onBoardClick, placePlayerFirstHandler);
 
-                const tile = board.getTile(x, y);
-                if (!tile || !tile.isEmpty()) {
-                    return;
-                }
-
-                // Create player with explicit image path
-                const player = new playerClass.classRef(board, "./images/player.svg");
-                tile.setOrganism(player);
-                board.organisms.push(player);
-                board.player = player; // Set the board's player reference
-                // board.sortOrganismsByInitiative();
-                instructionText.innerText = "Use Numpad to move. Click empty tile to add an organism.";
-                boardContainer.removeEventListener("click", placePlayerFirst);
-
-                // Enable game controls first
-                board.enableGame();
-                
-                // Wait a brief moment before enabling organism creation
-                setTimeout(() => {
-                    boardContainer.addEventListener("click", onBoardClick);
-                    console.log("Added click listener for organism creation");
-                }, 100);
-            }
-        };
-
-        boardContainer.addEventListener("click", placePlayerFirst);
+        boardContainer.addEventListener("click", placePlayerFirstHandler);
     });
 
     // Handle organism creation popup clicks
@@ -161,3 +131,31 @@ window.onload = () => {
         }
     }
 };
+
+function placePlayerFirst(event, board, boardContainer, instructionText, onBoardClick, handler) {
+    if (!event.target.classList.contains("tile")) return;
+
+    const x = parseInt(event.target.dataset.x);
+    const y = parseInt(event.target.dataset.y);
+
+    const tile = board.getTile(x, y);
+    if (!tile || !tile.isEmpty()) return;
+
+    if (board.player) return;
+
+    const player = new playerClass.classRef(board, "./images/player.svg");
+    tile.setOrganism(player);
+    board.organisms.push(player);
+    board.player = player;
+
+    instructionText.innerText = "Use Numpad to move. Click empty tile to add an organism.";
+
+    boardContainer.removeEventListener("click", handler); // This line now works via the stored reference
+
+    board.enableGame();
+
+    setTimeout(() => {
+        boardContainer.addEventListener("click", onBoardClick);
+        console.log("Added click listener for organism creation");
+    }, 100);
+}

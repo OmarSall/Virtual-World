@@ -51,12 +51,4 @@ export class PoisonBerry extends Plant {
     getName() {
         return "Poison Berry";
     }
-
-    /**
-     * Gets the default image path if none provided
-     * @returns {string} Path to the default image
-     */
-    getDefaultImagePath() {
-        return "images/poison-berry.svg";
-    }
 }

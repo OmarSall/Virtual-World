@@ -48,12 +48,4 @@ export class Turtle extends Animal {
     getName() {
         return "Turtle";
     }
-
-    /**
-     * Gets the default image path if none provided
-     * @returns {string} Path to the default image
-     */
-    getDefaultImagePath() {
-        return "images/turtle.svg";
-    }
 }

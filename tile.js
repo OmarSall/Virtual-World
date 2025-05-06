@@ -82,12 +82,4 @@ export class Tile {
             console.error("Error refreshing tile:", error);
         }
     }
-
-    /**
-     * Gets the tile's coordinates
-     * @returns {{x: number, y: number}} The tile's coordinates
-     */
-    getPosition() {
-        return { x: this.x, y: this.y };
-    }
 }

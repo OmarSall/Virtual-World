@@ -42,12 +42,4 @@ export class Guarana extends Plant {
     getName() {
         return "Guarana";
     }
-
-    /**
-     * Gets the default image path if none provided
-     * @returns {string} Path to the default image
-     */
-    getDefaultImagePath() {
-        return "images/guarana.svg";
-    }
 }

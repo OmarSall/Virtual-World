@@ -40,24 +40,4 @@ export class SowThistle extends Plant {
     getName() {
         return "Sow Thistle";
     }
-
-    /**
-     * Gets the default image path if none provided
-     * @returns {string} Path to the default image
-     */
-    getDefaultImagePath() {
-        return "images/sow-thistle.svg";
-    }
-
-    /**
-     * Spreads more aggressively than other plants
-     * @returns {boolean} True if spreading was successful
-     */
-    spread() {
-        // 10% chance to spread in each of three attempts
-        if (Math.random() < CONFIG.SPREAD_CHANCE) {
-            return super.spread();
-        }
-        return false;
-    }
 }

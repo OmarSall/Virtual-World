@@ -57,9 +57,10 @@ export class Fox extends Animal {
                 } else {
                     this.board.moveOrganism(this, newX, newY);
                 }
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     clone() {
@@ -75,11 +76,11 @@ export class Fox extends Animal {
         return "Fox";
     }
 
-    /**
-     * Gets the default image path if none provided
-     * @returns {string} Path to the default image
-     */
-    getDefaultImagePath() {
-        return "images/fox.svg";
-    }
+    // /**
+    //  * Gets the default image path if none provided
+    //  * @returns {string} Path to the default image
+    //  */
+    // getDefaultImagePath() {
+    //     return "images/fox.svg";
+    // }
 }

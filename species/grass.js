@@ -35,11 +35,11 @@ export class Grass extends Plant {
         return "Grass";
     }
 
-    /**
-     * Gets the default image path if none provided
-     * @returns {string} Path to the default image
-     */
-    getDefaultImagePath() {
-        return "images/grass.svg";
-    }
+    // /**
+    //  * Gets the default image path if none provided
+    //  * @returns {string} Path to the default image
+    //  */
+    // getDefaultImagePath() {
+    //     return "images/grass.svg";
+    // }
 }

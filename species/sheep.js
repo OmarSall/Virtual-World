@@ -35,12 +35,4 @@ export class Sheep extends Animal {
     getName() {
         return "Sheep";
     }
-
-    /**
-     * Gets the default image path if none provided
-     * @returns {string} Path to the default image
-     */
-    getDefaultImagePath() {
-        return "images/sheep.svg";
-    }
 }
