@@ -1,12 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Virtual World Game</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <h1>Virtual World Game</h1>
-        <script src="game.js"></script>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Virtual World Game</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1 id="title">Virtual World Game</h1>
+    
+    <!-- Start Game Button -->
+    <p id="instruction">Press "Start Game" to begin.</p>
+    <button id="start-game">Start Game</button>
+
+    <!-- Instructions Section -->
+    <div id="instructions" class="hidden">
+      <h3 id="numpad-instructions">
+        Use Numpad to Move:
+      </h3>
+      <pre id="numpad-controls">
+        ↖ 7   ↑ 8   ↗ 9
+        ← 4   · 5   → 6
+        ↙ 1   ↓ 2   ↘ 3
+      </pre>
+    </div>
+
+    <!-- Game Board (hidden initially) -->
+    <div id="board" class="hidden"></div>
+
+    <!-- Popup for organism selection -->
+    <div class="popup hidden" id="organismPopup"></div>
+
+    <script type="module" src="startGame.js"></script>
+  </body>
 </html>
